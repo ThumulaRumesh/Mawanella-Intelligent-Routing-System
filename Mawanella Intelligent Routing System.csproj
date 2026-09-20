@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Mawanella_Intelligent_Routing_System</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Data\Mawanella_Routing_Edges_FINAL.csv" />
+    <None Remove="Data\Mawanella_Routing_Nodes_FINAL.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\Mawanella_Routing_Edges_FINAL.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Mawanella_Routing_Nodes_FINAL.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
