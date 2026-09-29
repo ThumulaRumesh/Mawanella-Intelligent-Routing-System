@@ -272,6 +272,8 @@ namespace Mawanella_Intelligent_Routing_System
             string startNode,
             string targetNode,
             double maxCongestion,
+            string excludedNode,
+            string excludedEdgeID,
             out double totalDistance)
         {
             totalDistance = 0;
@@ -279,6 +281,12 @@ namespace Mawanella_Intelligent_Routing_System
             // Check whether both nodes exist
             if (!graph.GetNodes().ContainsKey(startNode) ||
                 !graph.GetNodes().ContainsKey(targetNode))
+            {
+                return new List<string>();
+            }
+
+            if (startNode == excludedNode ||
+                targetNode == excludedNode)
             {
                 return new List<string>();
             }
@@ -329,6 +337,19 @@ namespace Mawanella_Intelligent_Routing_System
                 foreach (Edge edge in graph.GetNeighbours(currentNode))
                 {
                     if (!unvisited.Contains(edge.To))
+                    {
+                        continue;
+                    }
+
+                    // Ignore the excluded node
+                    if (edge.To == excludedNode ||
+                        edge.From == excludedNode)
+                    {
+                        continue;
+                    }
+
+                    // Ignore the excluded edge
+                    if (edge.EdgeID == excludedEdgeID)
                     {
                         continue;
                     }

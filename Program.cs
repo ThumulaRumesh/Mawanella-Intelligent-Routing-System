@@ -4,118 +4,175 @@ using System.Diagnostics;
 
 using Mawanella_Intelligent_Routing_System;
 
-// false = run the functional demonstration using Tier 1
-// true  = run the Tier 5 performance test
 
-bool performanceTest = false;
+// ========================================
+// PROGRAM MODE
+// ========================================
 
+// false = run normal functional tests
+// true  = run performance evaluation
 
-//Tier 1 dataset 45,85 
-string tier1NodesFile = "Data/Mawanella_Routing_Nodes_FINAL.csv";
-string tier1EdgesFile = "Data/Mawanella_Routing_Edges_FINAL.csv";
-
-//Tier 2 dataset 89, 178
-string tier2NodesFile = "Data/Mawanella_Routing_Nodes_Tier2_89_FINAL.csv";
-string tier2EdgesFile = "Data/Mawanella_Routing_Edges_Tier2_178_FINAL.csv";
-
-//Tier 3 dataset 175, 347
-string tier3NodesFile = "Data/Mawanella_Routing_Nodes_Tier3_175_FINAL.csv";
-string tier3EdgesFile = "Data/Mawanella_Routing_Edges_Tier3_347_FINAL.csv";
-
-//Tier 4 dataset 300, 600
-string tier4NodesFile = "Data/Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv";
-string tier4EdgesFile = "Data/Mawanella_Routing_Edges_Tier4_600_Synthetic.csv";
-
-//Tier 5 dataset 600, 1200
-string tier5NodesFile = "Data/Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv";
-string tier5EdgesFile = "Data/Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv";
-
-// ============================================================
-// LOAD GRAPH
-// ============================================================
-
-string nodesFile;
-string edgesFile;
-
-if (performanceTest)
-{
-    nodesFile = tier5NodesFile;
-    edgesFile = tier5EdgesFile;
-}
-else
-{
-    nodesFile = tier1NodesFile;
-    edgesFile = tier1EdgesFile;
-}
+bool runPerformanceTest = false;
 
 
-Graph graph = new Graph();
+// true  = run additional edge-case tests
+// false = skip edge-case tests
 
-// Load nodes
-CsvLoader.LoadNodes(nodesFile, graph);
-
-// Load edges
-CsvLoader.LoadEdges(edgesFile, graph);
+bool runEdgeCaseTests = false;
 
 
-// ============================================================
+// ========================================
+// FUNCTIONAL DATASET SELECTION
+// ========================================
+
+// Tier 1 - 45 Nodes / 85 Edges
+
+string nodesFile =
+    "Data/Mawanella_Routing_Nodes_FINAL.csv";
+
+string edgesFile =
+    "Data/Mawanella_Routing_Edges_FINAL.csv";
+
+
+// Tier 2 - 89 Nodes / 178 Edges
+
+//string nodesFile =
+//    "Data/Mawanella_Routing_Nodes_Tier2_89_FINAL.csv";
+
+//string edgesFile =
+//    "Data/Mawanella_Routing_Edges_Tier2_178_FINAL.csv";
+
+
+// Tier 3 - 175 Nodes / 347 Edges
+
+//string nodesFile =
+//    "Data/Mawanella_Routing_Nodes_Tier3_175_FINAL.csv";
+
+//string edgesFile =
+//    "Data/Mawanella_Routing_Edges_Tier3_347_FINAL.csv";
+
+
+// Tier 4 - 300 Nodes / 600 Edges
+
+//string nodesFile =
+//    "Data/Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv";
+
+//string edgesFile =
+//    "Data/Mawanella_Routing_Edges_Tier4_600_Synthetic.csv";
+
+
+// Tier 5 - 600 Nodes / 1200 Edges
+
+//string nodesFile =
+//    "Data/Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv";
+
+//string edgesFile =
+//    "Data/Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv";
+
+
+// ========================================
 // FUNCTIONAL TESTS
-// ============================================================
+// ========================================
 
-if (!performanceTest)
+if (!runPerformanceTest)
 {
-    Console.WriteLine();
-    Console.WriteLine("========================================");
-    Console.WriteLine("Mawanella Intelligent Routing System");
-    Console.WriteLine("========================================");
+    // ====================================
+    // CREATE GRAPH
+    // ====================================
+
+    Graph graph = new Graph();
+
+    CsvLoader.LoadNodes(
+        nodesFile,
+        graph
+    );
+
+    CsvLoader.LoadEdges(
+        edgesFile,
+        graph
+    );
+
+
+    // ====================================
+    // START AND TARGET
+    // ====================================
+
+    string startNode = "N01";
+    string targetNode = "N15";
+
+
+    // ====================================
+    // SYSTEM TITLE
+    // ====================================
+
+    Console.WriteLine(
+        "========================================"
+    );
+
+    Console.WriteLine(
+        "Mawanella Intelligent Routing System"
+    );
+
+    Console.WriteLine(
+        "========================================"
+    );
+
+
+    // ====================================
+    // NETWORK INFORMATION
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Network Information");
     Console.WriteLine("--------------------");
 
     Console.WriteLine(
-        "Number of nodes: " +
-        graph.GetNodes().Count
+        "Number of nodes: "
+        + graph.GetNodes().Count
     );
 
     Console.WriteLine(
-        "Number of edges: " +
-        graph.GetEdges().Count
+        "Number of edges: "
+        + graph.GetEdges().Count
     );
 
 
-    // ========================================================
-    // DISPLAY NEIGHBOURS
-    // ========================================================
+    // ====================================
+    // SHOW NEIGHBOURS
+    // ====================================
 
     Console.WriteLine();
-    Console.WriteLine("Neighbours of N01:");
-    Console.WriteLine("------------------");
+    Console.WriteLine(
+        "Neighbours of "
+        + startNode
+        + ":"
+    );
 
-    List<Edge> neighbours =
-        graph.GetNeighbours("N01");
+    Console.WriteLine(
+        "------------------"
+    );
 
-    foreach (Edge edge in neighbours)
+    foreach (Edge edge
+             in graph.GetNeighbours(startNode))
     {
         Console.WriteLine(
-            edge.From + " -> " +
-            edge.To +
-            " | Distance: " +
-            edge.Distance.ToString("F2") +
-            " km" +
-            " | Travel Time: " +
-            edge.TravelTime.ToString("F2") +
-            " min" +
-            " | Congestion: " +
-            edge.Congestion +
-            "%"
+            edge.From
+            + " -> "
+            + edge.To
+            + " | Distance: "
+            + edge.Distance.ToString("F2")
+            + " km | Travel Time: "
+            + edge.TravelTime.ToString("F2")
+            + " min | Congestion: "
+            + edge.Congestion
+            + "%"
         );
     }
 
 
-    // ========================================================
+    // ====================================
     // SHORTEST DISTANCE ROUTE
-    // ========================================================
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Shortest Distance Route");
@@ -123,84 +180,94 @@ if (!performanceTest)
 
     double totalDistance;
 
-    List<string> path =
+    List<string> shortestPath =
         Dijkstra.FindShortestPath(
             graph,
-            "N01",
-            "N15",
+            startNode,
+            targetNode,
             out totalDistance
         );
 
-    if (path.Count > 0)
+    if (shortestPath.Count > 0)
     {
         Console.WriteLine(
-            "Route: " +
-            string.Join(" -> ", path)
+            "Route: "
+            + string.Join(
+                " -> ",
+                shortestPath
+            )
         );
 
         Console.WriteLine(
-            "Total Distance: " +
-            totalDistance.ToString("F2") +
-            " km"
+            "Total Distance: "
+            + totalDistance.ToString("F2")
+            + " km"
         );
     }
     else
     {
-        Console.WriteLine("No route found.");
+        Console.WriteLine(
+            "No route found."
+        );
     }
 
 
-    // ========================================================
+    // ====================================
     // FASTEST ROUTE
-    // ========================================================
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Fastest Route");
     Console.WriteLine("-------------");
 
-    double totalTime;
+    double totalTravelTime;
 
     List<string> fastestPath =
         Dijkstra.FindFastestPath(
             graph,
-            "N01",
-            "N15",
-            out totalTime
+            startNode,
+            targetNode,
+            out totalTravelTime
         );
 
     if (fastestPath.Count > 0)
     {
         Console.WriteLine(
-            "Route: " +
-            string.Join(" -> ", fastestPath)
+            "Route: "
+            + string.Join(
+                " -> ",
+                fastestPath
+            )
         );
 
         Console.WriteLine(
-            "Total Travel Time: " +
-            totalTime.ToString("F2") +
-            " minutes"
+            "Total Travel Time: "
+            + totalTravelTime.ToString("F2")
+            + " minutes"
         );
     }
     else
     {
-        Console.WriteLine("No route found.");
+        Console.WriteLine(
+            "No route found."
+        );
     }
 
 
-    // ========================================================
-    // CONSTRAINED ROUTING
-    // ========================================================
+    // ====================================
+    // CONSTRAINED ROUTING - CONGESTION
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Constrained Routing");
     Console.WriteLine("-------------------");
 
-    double maxCongestion = 70;
+    double maximumCongestion = 70;
 
     Console.WriteLine(
-        "Maximum allowed congestion: " +
-        maxCongestion +
-        "%"
+        "Maximum allowed congestion: "
+        + maximumCongestion
+        + "%"
     );
 
     double constrainedDistance;
@@ -208,23 +275,28 @@ if (!performanceTest)
     List<string> constrainedPath =
         Dijkstra.FindConstrainedPath(
             graph,
-            "N01",
-            "N15",
-            maxCongestion,
+            startNode,
+            targetNode,
+            maximumCongestion,
+            null,
+            null,
             out constrainedDistance
         );
 
     if (constrainedPath.Count > 0)
     {
         Console.WriteLine(
-            "Route: " +
-            string.Join(" -> ", constrainedPath)
+            "Route: "
+            + string.Join(
+                " -> ",
+                constrainedPath
+            )
         );
 
         Console.WriteLine(
-            "Total Distance: " +
-            constrainedDistance.ToString("F2") +
-            " km"
+            "Total Distance: "
+            + constrainedDistance.ToString("F2")
+            + " km"
         );
     }
     else
@@ -235,43 +307,49 @@ if (!performanceTest)
     }
 
 
-    // ========================================================
-    // STRICT CONGESTION EDGE CASE
-    // ========================================================
+    // ====================================
+    // STRICT CONGESTION TEST
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Strict Congestion Test");
     Console.WriteLine("----------------------");
 
     double strictCongestion = 50;
+
+    Console.WriteLine(
+        "Maximum allowed congestion: "
+        + strictCongestion
+        + "%"
+    );
+
     double strictDistance;
 
     List<string> strictPath =
         Dijkstra.FindConstrainedPath(
             graph,
-            "N01",
-            "N15",
+            startNode,
+            targetNode,
             strictCongestion,
+            null,
+            null,
             out strictDistance
         );
-
-    Console.WriteLine(
-        "Maximum allowed congestion: " +
-        strictCongestion +
-        "%"
-    );
 
     if (strictPath.Count > 0)
     {
         Console.WriteLine(
-            "Route: " +
-            string.Join(" -> ", strictPath)
+            "Route: "
+            + string.Join(
+                " -> ",
+                strictPath
+            )
         );
 
         Console.WriteLine(
-            "Total Distance: " +
-            strictDistance.ToString("F2") +
-            " km"
+            "Total Distance: "
+            + strictDistance.ToString("F2")
+            + " km"
         );
     }
     else
@@ -282,9 +360,113 @@ if (!performanceTest)
     }
 
 
-    // ========================================================
+    // ====================================
+    // EXCLUDED NODE TEST
+    // ====================================
+
+    Console.WriteLine();
+    Console.WriteLine("Excluded Node Test");
+    Console.WriteLine("------------------");
+
+    string excludedNode = "N12";
+
+    Console.WriteLine(
+        "Excluded node: "
+        + excludedNode
+    );
+
+    double excludedNodeDistance;
+
+    List<string> excludedNodePath =
+        Dijkstra.FindConstrainedPath(
+            graph,
+            startNode,
+            targetNode,
+            100,
+            excludedNode,
+            null,
+            out excludedNodeDistance
+        );
+
+    if (excludedNodePath.Count > 0)
+    {
+        Console.WriteLine(
+            "Alternative route: "
+            + string.Join(
+                " -> ",
+                excludedNodePath
+            )
+        );
+
+        Console.WriteLine(
+            "Total Distance: "
+            + excludedNodeDistance.ToString("F2")
+            + " km"
+        );
+    }
+    else
+    {
+        Console.WriteLine(
+            "No route is available."
+        );
+    }
+
+
+    // ====================================
+    // EXCLUDED EDGE TEST
+    // ====================================
+
+    Console.WriteLine();
+    Console.WriteLine("Excluded Edge Test");
+    Console.WriteLine("------------------");
+
+    string excludedEdgeID = "E012";
+
+    Console.WriteLine(
+        "Excluded edge: "
+        + excludedEdgeID
+    );
+
+    double excludedEdgeDistance;
+
+    List<string> excludedEdgePath =
+        Dijkstra.FindConstrainedPath(
+            graph,
+            startNode,
+            targetNode,
+            100,
+            null,
+            excludedEdgeID,
+            out excludedEdgeDistance
+        );
+
+    if (excludedEdgePath.Count > 0)
+    {
+        Console.WriteLine(
+            "Alternative route: "
+            + string.Join(
+                " -> ",
+                excludedEdgePath
+            )
+        );
+
+        Console.WriteLine(
+            "Total Distance: "
+            + excludedEdgeDistance.ToString("F2")
+            + " km"
+        );
+    }
+    else
+    {
+        Console.WriteLine(
+            "No route is available."
+        );
+    }
+
+
+    // ====================================
     // TIME-BUDGET REACHABILITY
-    // ========================================================
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Time-Budget Reachability");
@@ -292,33 +474,36 @@ if (!performanceTest)
 
     double timeBudget = 15;
 
+    Console.WriteLine(
+        "Time budget: "
+        + timeBudget
+        + " minutes"
+    );
+
     List<string> reachableNodes =
         Dijkstra.FindReachableNodes(
             graph,
-            "N01",
+            startNode,
             timeBudget
         );
 
     Console.WriteLine(
-        "Time budget: " +
-        timeBudget +
-        " minutes"
+        "Reachable nodes: "
+        + reachableNodes.Count
     );
 
     Console.WriteLine(
-        "Reachable nodes: " +
-        reachableNodes.Count
+        "Nodes: "
+        + string.Join(
+            ", ",
+            reachableNodes
+        )
     );
 
-    Console.WriteLine(
-        "Nodes: " +
-        string.Join(", ", reachableNodes)
-    );
 
-
-    // ========================================================
+    // ====================================
     // CONNECTIVITY TEST
-    // ========================================================
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Connectivity Test");
@@ -327,12 +512,12 @@ if (!performanceTest)
     List<string> visitedNodes =
         Traversal.DFT(
             graph,
-            "N01"
+            startNode
         );
 
     Console.WriteLine(
-        "Nodes reached using DFT: " +
-        visitedNodes.Count
+        "Nodes reached using DFT: "
+        + visitedNodes.Count
     );
 
     if (visitedNodes.Count ==
@@ -350,207 +535,682 @@ if (!performanceTest)
     }
 
 
-    // ========================================================
+    // ====================================
     // BOTTLENECK NODE TEST
-    // ========================================================
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Bottleneck Node Test");
     Console.WriteLine("--------------------");
 
-    string criticalNode = "";
+    string mostCriticalNode = null;
 
-    int lowestReachableAfterNode =
-        graph.GetNodes().Count - 1;
+    int lowestReachableCount =
+        graph.GetNodes().Count;
 
-    // The graph is connected before removal.
-    // Removing one normal node should leave
-    // all other nodes reachable.
-    int normalReachableAfterRemoval =
-        visitedNodes.Count - 1;
-
-    foreach (string nodeID in graph.GetNodes().Keys)
+    foreach (string nodeID
+             in graph.GetNodes().Keys)
     {
-        // Do not remove the starting node
-        if (nodeID == "N01")
+        // The starting node cannot be tested
+        // because the traversal starts from it.
+        if (nodeID == startNode)
         {
             continue;
         }
 
-        int reachable =
+        int reachableCount =
             Traversal.CountReachableAfterRemovingNode(
                 graph,
-                "N01",
+                startNode,
                 nodeID
             );
 
         Console.WriteLine(
-            "Removing " +
-            nodeID +
-            ": " +
-            reachable +
-            " nodes reachable"
+            "Removing "
+            + nodeID
+            + ": "
+            + reachableCount
+            + " nodes reachable"
         );
 
-        // Only treat the node as a bottleneck if
-        // removing it disconnects additional nodes.
-        if (reachable < normalReachableAfterRemoval &&
-            reachable < lowestReachableAfterNode)
+        if (reachableCount <
+            lowestReachableCount)
         {
-            lowestReachableAfterNode = reachable;
-            criticalNode = nodeID;
+            lowestReachableCount =
+                reachableCount;
+
+            mostCriticalNode =
+                nodeID;
         }
     }
 
-    Console.WriteLine();
-
-    if (criticalNode == "")
+    if (mostCriticalNode != null)
     {
+        Console.WriteLine();
+
         Console.WriteLine(
-            "No single bottleneck node was detected."
+            "Most critical node: "
+            + mostCriticalNode
+        );
+
+        Console.WriteLine(
+            "Reachable nodes after removal: "
+            + lowestReachableCount
         );
     }
     else
     {
         Console.WriteLine(
-            "Most critical node: " +
-            criticalNode
-        );
-
-        Console.WriteLine(
-            "Reachable nodes after removal: " +
-            lowestReachableAfterNode
+            "No critical node was detected."
         );
     }
 
 
-    // ========================================================
+    // ====================================
     // CRITICAL EDGE TEST
-    // ========================================================
+    // ====================================
 
     Console.WriteLine();
     Console.WriteLine("Critical Edge Test");
     Console.WriteLine("------------------");
 
-    string criticalEdge = "";
+    bool criticalEdgeFound = false;
 
-    int lowestReachableAfterEdge =
-        visitedNodes.Count;
-
-    foreach (Edge edge in graph.GetEdges())
+    foreach (Edge edge
+             in graph.GetEdges())
     {
-        int reachable =
+        int reachableCount =
             Traversal.CountReachableAfterRemovingEdge(
                 graph,
-                "N01",
+                startNode,
                 edge.From,
                 edge.To
             );
 
-        Console.WriteLine(
-            "Removing " +
-            edge.EdgeID +
-            " (" +
-            edge.From +
-            " - " +
-            edge.To +
-            "): " +
-            reachable +
-            " nodes reachable"
-        );
-
-        // Only select an edge if its removal
-        // disconnects part of the graph.
-        if (reachable < lowestReachableAfterEdge)
+        if (reachableCount <
+            graph.GetNodes().Count)
         {
-            lowestReachableAfterEdge = reachable;
-            criticalEdge = edge.EdgeID;
+            Console.WriteLine(
+                "Removing "
+                + edge.EdgeID
+                + ": "
+                + reachableCount
+                + " nodes reachable"
+            );
+
+            criticalEdgeFound = true;
         }
     }
 
-    Console.WriteLine();
-
-    if (criticalEdge == "")
+    if (!criticalEdgeFound)
     {
         Console.WriteLine(
             "No single critical edge was detected."
         );
     }
-    else if (lowestReachableAfterEdge ==
-             visitedNodes.Count)
+
+
+    // ====================================
+    // EDGE CASE TESTS
+    // ====================================
+
+    if (runEdgeCaseTests)
     {
-        Console.WriteLine(
-            "No single critical edge was detected."
-        );
-    }
-    else
-    {
-        Console.WriteLine(
-            "Most critical edge: " +
-            criticalEdge
-        );
+        Console.WriteLine();
+        Console.WriteLine("Edge Case Tests");
+        Console.WriteLine("---------------");
+
+
+        // =================================
+        // INVALID START NODE
+        // =================================
+
+        double invalidStartDistance;
+
+        List<string> invalidStartPath =
+            Dijkstra.FindShortestPath(
+                graph,
+                "INVALID",
+                targetNode,
+                out invalidStartDistance
+            );
 
         Console.WriteLine(
-            "Reachable nodes after removal: " +
-            lowestReachableAfterEdge
+            "Invalid start node: "
+            + (invalidStartPath.Count == 0
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // INVALID TARGET NODE
+        // =================================
+
+        double invalidTargetDistance;
+
+        List<string> invalidTargetPath =
+            Dijkstra.FindShortestPath(
+                graph,
+                startNode,
+                "INVALID",
+                out invalidTargetDistance
+            );
+
+        Console.WriteLine(
+            "Invalid target node: "
+            + (invalidTargetPath.Count == 0
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // START = TARGET
+        // =================================
+
+        double sameNodeDistance;
+
+        List<string> sameNodePath =
+            Dijkstra.FindShortestPath(
+                graph,
+                startNode,
+                startNode,
+                out sameNodeDistance
+            );
+
+        bool sameNodePassed =
+            sameNodePath.Count == 1 &&
+            sameNodePath[0] == startNode &&
+            sameNodeDistance == 0;
+
+        Console.WriteLine(
+            "Start equals target: "
+            + (sameNodePassed
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // EXCLUDED START NODE
+        // =================================
+
+        double excludedStartDistance;
+
+        List<string> excludedStartPath =
+            Dijkstra.FindConstrainedPath(
+                graph,
+                startNode,
+                targetNode,
+                100,
+                startNode,
+                null,
+                out excludedStartDistance
+            );
+
+        Console.WriteLine(
+            "Excluded start node: "
+            + (excludedStartPath.Count == 0
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // EXCLUDED TARGET NODE
+        // =================================
+
+        double excludedTargetDistance;
+
+        List<string> excludedTargetPath =
+            Dijkstra.FindConstrainedPath(
+                graph,
+                startNode,
+                targetNode,
+                100,
+                targetNode,
+                null,
+                out excludedTargetDistance
+            );
+
+        Console.WriteLine(
+            "Excluded target node: "
+            + (excludedTargetPath.Count == 0
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // ZERO-MINUTE TIME BUDGET
+        // =================================
+
+        List<string> zeroBudgetNodes =
+            Dijkstra.FindReachableNodes(
+                graph,
+                startNode,
+                0
+            );
+
+        bool zeroBudgetPassed =
+            zeroBudgetNodes.Count == 1 &&
+            zeroBudgetNodes[0] == startNode;
+
+        Console.WriteLine(
+            "Zero-minute time budget: "
+            + (zeroBudgetPassed
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // ZERO CONGESTION LIMIT
+        // =================================
+
+        double zeroCongestionDistance;
+
+        List<string> zeroCongestionPath =
+            Dijkstra.FindConstrainedPath(
+                graph,
+                startNode,
+                targetNode,
+                0,
+                null,
+                null,
+                out zeroCongestionDistance
+            );
+
+        Console.WriteLine(
+            "Zero congestion limit: "
+            + (zeroCongestionPath.Count == 0
+                ? "PASS"
+                : "FAIL")
+        );
+
+
+        // =================================
+        // EDGE CASE SUMMARY
+        // =================================
+
+        Console.WriteLine();
+
+        Console.WriteLine(
+            "Edge case testing completed."
         );
     }
 }
 
 
-// ============================================================
+// ========================================
 // PERFORMANCE TEST
-// ============================================================
+// ========================================
 
-if (performanceTest)
+else
 {
-    Console.WriteLine();
-    Console.WriteLine("========================================");
-    Console.WriteLine("Performance Test");
-    Console.WriteLine("========================================");
+    // ====================================
+    // PERFORMANCE TEST DATASETS
+    // ====================================
 
-    Console.WriteLine(
-        "Nodes: " +
-        graph.GetNodes().Count
-    );
-
-    Console.WriteLine(
-        "Edges: " +
-        graph.GetEdges().Count
-    );
-
-    Stopwatch stopwatch =
-        new Stopwatch();
-
-    int numberOfRuns = 10;
-
-    double totalTime = 0;
-
-    for (int i = 0; i < numberOfRuns; i++)
+    string[] nodesFiles =
     {
-        stopwatch.Restart();
+        "Data/Mawanella_Routing_Nodes_FINAL.csv",
+        "Data/Mawanella_Routing_Nodes_Tier2_89_FINAL.csv",
+        "Data/Mawanella_Routing_Nodes_Tier3_175_FINAL.csv",
+        "Data/Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv",
+        "Data/Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv"
+    };
 
-        double testDistance;
+    string[] edgesFiles =
+    {
+        "Data/Mawanella_Routing_Edges_FINAL.csv",
+        "Data/Mawanella_Routing_Edges_Tier2_178_FINAL.csv",
+        "Data/Mawanella_Routing_Edges_Tier3_347_FINAL.csv",
+        "Data/Mawanella_Routing_Edges_Tier4_600_Synthetic.csv",
+        "Data/Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv"
+    };
 
-        Dijkstra.FindShortestPath(
-            graph,
-            "N0001",
-            "N0015",
-            out testDistance
+    string[] datasetNames =
+    {
+        "Tier 1",
+        "Tier 2",
+        "Tier 3",
+        "Tier 4",
+        "Tier 5"
+    };
+
+
+    // ====================================
+    // DATASET SIZES
+    // ====================================
+
+    int[] nodeCounts =
+    {
+        45,
+        89,
+        175,
+        300,
+        600
+    };
+
+    int[] edgeCounts =
+    {
+        85,
+        178,
+        347,
+        600,
+        1200
+    };
+
+
+    // ====================================
+    // PERFORMANCE SETTINGS
+    // ====================================
+
+    int numberOfRounds = 5;
+
+
+    // ====================================
+    // TITLE
+    // ====================================
+
+    Console.WriteLine(
+        "========================================"
+    );
+
+    Console.WriteLine(
+        "Mawanella Dijkstra Performance Evaluation"
+    );
+
+    Console.WriteLine(
+        "========================================"
+    );
+
+    Console.WriteLine();
+
+    Console.WriteLine(
+        "Rounds per dataset: "
+        + numberOfRounds
+    );
+
+    Console.WriteLine(
+        "Build configuration: Release"
+    );
+
+    Console.WriteLine();
+
+
+    // ====================================
+    // TIMER INFORMATION
+    // ====================================
+
+    Console.WriteLine(
+        "High-resolution timer: "
+        + Stopwatch.IsHighResolution
+    );
+
+    Console.WriteLine(
+        "Timer frequency: "
+        + Stopwatch.Frequency
+        + " ticks/second"
+    );
+
+    Console.WriteLine();
+
+
+    // ====================================
+    // RESULTS HEADER
+    // ====================================
+
+    Console.WriteLine(
+        "Results"
+    );
+
+    Console.WriteLine(
+        "-------------------------------------------------------------"
+    );
+
+    Console.WriteLine(
+        "Dataset | Nodes | Edges | Searches | Total Time | Avg Time"
+    );
+
+    Console.WriteLine(
+        "-------------------------------------------------------------"
+    );
+
+
+    // ====================================
+    // TEST EACH DATASET
+    // ====================================
+
+    for (int i = 0;
+         i < nodesFiles.Length;
+         i++)
+    {
+        // =================================
+        // LOAD GRAPH
+        // =================================
+
+        Graph graph = new Graph();
+
+        CsvLoader.LoadNodes(
+            nodesFiles[i],
+            graph
         );
+
+        CsvLoader.LoadEdges(
+            edgesFiles[i],
+            graph
+        );
+
+
+        // =================================
+        // SELECT START AND TARGET
+        // =================================
+
+        string startNode;
+        string targetNode;
+
+        if (i == 0)
+        {
+            startNode = "N01";
+            targetNode = "N45";
+        }
+        else if (i == 1)
+        {
+            startNode = "N001";
+            targetNode = "N089";
+        }
+        else if (i == 2)
+        {
+            startNode = "N001";
+            targetNode = "N175";
+        }
+        else if (i == 3)
+        {
+            startNode = "N0001";
+            targetNode = "N0300";
+        }
+        else
+        {
+            startNode = "N0001";
+            targetNode = "N0600";
+        }
+
+
+        // =================================
+        // GET SOURCE NODES
+        // =================================
+
+        List<string> sourceNodes =
+            new List<string>(
+                graph.GetNodes().Keys
+            );
+
+
+        // =================================
+        // WARM-UP
+        // =================================
+
+        foreach (string sourceNode
+                 in sourceNodes)
+        {
+            double warmupDistance;
+
+            List<string> warmupPath =
+                Dijkstra.FindShortestPath(
+                    graph,
+                    sourceNode,
+                    targetNode,
+                    out warmupDistance
+                );
+
+            GC.KeepAlive(warmupPath);
+        }
+
+
+        // =================================
+        // CHECKSUM AND VALIDATION
+        // =================================
+
+        double checksum = 0;
+
+        int successfulSearches = 0;
+
+
+        // =================================
+        // START TIMER
+        // =================================
+
+        Stopwatch stopwatch =
+            Stopwatch.StartNew();
+
+
+        // =================================
+        // REPEATED DIJKSTRA TEST
+        // =================================
+
+        for (int round = 0;
+             round < numberOfRounds;
+             round++)
+        {
+            foreach (string sourceNode
+                     in sourceNodes)
+            {
+                double testDistance;
+
+                List<string> path =
+                    Dijkstra.FindShortestPath(
+                        graph,
+                        sourceNode,
+                        targetNode,
+                        out testDistance
+                    );
+
+
+                // Use the returned values so that
+                // the benchmark work is observable.
+
+                checksum +=
+                    testDistance;
+
+                checksum +=
+                    path.Count;
+
+                if (path.Count > 0)
+                {
+                    successfulSearches++;
+                }
+            }
+        }
+
+
+        // =================================
+        // STOP TIMER
+        // =================================
 
         stopwatch.Stop();
 
-        totalTime +=
-            stopwatch.Elapsed.TotalMilliseconds;
+
+        // =================================
+        // TOTAL TIME
+        // =================================
+
+        double totalMilliseconds =
+            (double)stopwatch.ElapsedTicks
+            / Stopwatch.Frequency
+            * 1000.0;
+
+
+        // =================================
+        // TOTAL SEARCHES
+        // =================================
+
+        int totalSearches =
+            sourceNodes.Count
+            * numberOfRounds;
+
+
+        // =================================
+        // AVERAGE TIME
+        // =================================
+
+        double averageTime =
+            totalMilliseconds
+            / totalSearches;
+
+
+        // =================================
+        // DISPLAY RESULT
+        // =================================
+
+        Console.WriteLine(
+            datasetNames[i]
+            + "     | "
+            + nodeCounts[i]
+            + "   | "
+            + edgeCounts[i]
+            + "   | "
+            + totalSearches
+            + "      | "
+            + totalMilliseconds.ToString("F4")
+            + " ms"
+            + " | "
+            + averageTime.ToString("F6")
+            + " ms"
+        );
+
+        Console.WriteLine(
+            "          Target: "
+            + targetNode
+            + " | Successful: "
+            + successfulSearches
+            + "/"
+            + totalSearches
+            + " | Checksum: "
+            + checksum.ToString("F2")
+        );
+
+        Console.WriteLine();
     }
 
-    double averageTime =
-        totalTime / numberOfRuns;
+
+    // ====================================
+    // END
+    // ====================================
 
     Console.WriteLine(
-        "Average Dijkstra execution time: " +
-        averageTime.ToString("F4") +
-        " ms"
+        "-------------------------------------------------------------"
+    );
+
+    Console.WriteLine();
+
+    Console.WriteLine(
+        "Performance test completed."
+    );
+
+    Console.WriteLine(
+        "All datasets were tested using the same Release configuration."
     );
 }
