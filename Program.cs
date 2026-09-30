@@ -12,7 +12,7 @@ using Mawanella_Intelligent_Routing_System;
 // false = run normal functional tests
 // true  = run performance evaluation
 
-bool runPerformanceTest = false;
+bool runPerformanceTest = true;
 
 
 // true  = run additional edge-case tests
@@ -472,33 +472,31 @@ if (!runPerformanceTest)
     Console.WriteLine("Time-Budget Reachability");
     Console.WriteLine("------------------------");
 
-    double timeBudget = 15;
+    double[] timeBudgets =
+    {
+    5,
+    10,
+    15,
+    20,
+    30
+};
 
-    Console.WriteLine(
-        "Time budget: "
-        + timeBudget
-        + " minutes"
-    );
+    foreach (double timeBudget in timeBudgets)
+    {
+        List<string> reachableNodes =
+            Dijkstra.FindReachableNodes(
+                graph,
+                startNode,
+                timeBudget
+            );
 
-    List<string> reachableNodes =
-        Dijkstra.FindReachableNodes(
-            graph,
-            startNode,
+        Console.WriteLine(
             timeBudget
+            + " minutes -> "
+            + reachableNodes.Count
+            + " nodes reachable"
         );
-
-    Console.WriteLine(
-        "Reachable nodes: "
-        + reachableNodes.Count
-    );
-
-    Console.WriteLine(
-        "Nodes: "
-        + string.Join(
-            ", ",
-            reachableNodes
-        )
-    );
+    }
 
 
     // ====================================

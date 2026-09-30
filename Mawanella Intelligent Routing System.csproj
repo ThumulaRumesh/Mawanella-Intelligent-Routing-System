@@ -1,60 +1,66 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Mawanella_Intelligent_Routing_System</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<RootNamespace>Mawanella_Intelligent_Routing_System</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Data\Mawanella_Routing_Edges_FINAL.csv" />
-    <None Remove="Data\Mawanella_Routing_Edges_Tier2_178_FINAL.csv" />
-    <None Remove="Data\Mawanella_Routing_Edges_Tier3_347_FINAL.csv" />
-    <None Remove="Data\Mawanella_Routing_Edges_Tier4_600_Synthetic.csv" />
-    <None Remove="Data\Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv" />
-    <None Remove="Data\Mawanella_Routing_Nodes_FINAL.csv" />
-    <None Remove="Data\Mawanella_Routing_Nodes_Tier2_89_FINAL.csv" />
-    <None Remove="Data\Mawanella_Routing_Nodes_Tier3_175_FINAL.csv" />
-    <None Remove="Data\Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv" />
-    <None Remove="Data\Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Data\Mawanella_Routing_Edges_FINAL.csv" />
+		<None Remove="Data\Mawanella_Routing_Edges_Tier2_178_FINAL.csv" />
+		<None Remove="Data\Mawanella_Routing_Edges_Tier3_347_FINAL.csv" />
+		<None Remove="Data\Mawanella_Routing_Edges_Tier4_600_Synthetic.csv" />
+		<None Remove="Data\Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv" />
+		<None Remove="Data\Mawanella_Routing_Nodes_FINAL.csv" />
+		<None Remove="Data\Mawanella_Routing_Nodes_Tier2_89_FINAL.csv" />
+		<None Remove="Data\Mawanella_Routing_Nodes_Tier3_175_FINAL.csv" />
+		<None Remove="Data\Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv" />
+		<None Remove="Data\Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Data\Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Data\Mawanella_Routing_Edges_FINAL.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 
-  <ItemGroup>
-    <Content Include="Data\Mawanella_Routing_Edges_FINAL.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Edges_Tier2_178_FINAL.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Edges_Tier3_347_FINAL.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Edges_Tier4_600_Synthetic.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Nodes_FINAL.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Nodes_Tier2_89_FINAL.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Nodes_Tier3_175_FINAL.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+		<Content Include="Data\Mawanella_Routing_Edges_Tier2_178_FINAL.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Edges_Tier3_347_FINAL.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Edges_Tier4_600_Synthetic.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Nodes_FINAL.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Nodes_Tier2_89_FINAL.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Nodes_Tier3_175_FINAL.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Nodes_Tier4_300_Synthetic.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+
+		<Content Include="Data\Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 </Project>
