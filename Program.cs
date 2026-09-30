@@ -12,7 +12,7 @@ using Mawanella_Intelligent_Routing_System;
 // false = run normal functional tests
 // true  = run performance evaluation
 
-bool runPerformanceTest = true;
+bool runPerformanceTest = false;
 
 
 // true  = run additional edge-case tests

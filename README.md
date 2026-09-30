@@ -218,17 +218,17 @@ Total Distance: 21.50 km
 
 ### Time-budget reachability
 
-Time budget:
+The system tests reachability using different travel-time budgets.
 
-```text
-15 minutes
-```
+| Time budget | Reachable nodes |
+|---:|---:|
+| 5 minutes | 9 |
+| 10 minutes | 17 |
+| 15 minutes | 34 |
+| 20 minutes | 41 |
+| 30 minutes | 45 |
 
-Reachable nodes:
-
-```text
-34
-```
+The results show how the number of reachable locations changes as the available travel-time budget increases.
 
 ### Connectivity
 
