@@ -31,6 +31,11 @@ The project is intended as an algorithmic prototype for the DSA assessment. It i
 - Development environment: Visual Studio
 - Programming approach: Object-Oriented Programming (OOP)
 
+### Dependencies
+
+- .NET 8 SDK/runtime
+- No external NuGet packages; standard .NET libraries are used.
+
 ## 3. Project Structure
 
 ```text
