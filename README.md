@@ -366,11 +366,12 @@ These limitations are documented intentionally so that the prototype's scope is 
 
 ## 13. AI Use Declaration
 
-AI assistance was used during development for:
-- explaining DSA concepts
-- checking code structure and syntax
-- helping troubleshoot implementation issues
-- helping organize documentation and presentation material
+AI assistance was used during development as follows:
+- **Google Gemini:** Finding data and explaining datasets with the help of Google Maps.
+- **ChatGPT:** Clarifying DSA concepts, reviewing code structure/syntax, and troubleshooting implementation issues.
+- **Claude:** Helping organize documentation and presentation material.
+
+> **Academic Integrity Note:** All core graph algorithms, implementation logic, and final codebase are my own original work.
 
 ## 14. Assessment Alignment
 
