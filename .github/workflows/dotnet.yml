@@ -1,0 +1,31 @@
+name: Build .NET application
+
+on:
+  push:
+    branches:
+      - master
+      - improved-version
+  pull_request:
+    branches:
+      - master
+      - improved-version
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore "Mawanella Intelligent Routing System.sln"
+
+      - name: Build in Release mode
+        run: dotnet build "Mawanella Intelligent Routing System.sln" --configuration Release --no-restore
