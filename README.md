@@ -90,7 +90,7 @@ Each node stores its connected edges, allowing the routing and traversal algorit
 
 ### Dijkstra's Algorithm
 
-The current implementation uses Dijkstra's algorithm with a linear search for the next unvisited node with the smallest known cost.
+The improved implementation uses Dijkstra's algorithm with .NET's `PriorityQueue<string, double>` min-priority queue. The queue selects the pending node with the lowest known cost. If a better route to a node is found later, a new queue entry is added; outdated entries are skipped when removed.
 
 It is used for:
 
@@ -101,10 +101,7 @@ It is used for:
 - Excluded-edge routing
 - Time-budget reachability using travel time
 
-The current implementation has:
-
-- Time complexity: O(V² + E)
-- Auxiliary space: O(V)
+With the priority queue, routing no longer scans every unvisited node to find the next minimum. With duplicate queue entries used instead of decrease-key, a conservative bound for the search is O((V + E) log E) time and O(V + E) auxiliary space in the worst case.
 
 ### Depth-First Traversal (DFT)
 
@@ -293,10 +290,10 @@ Each benchmark search completed successfully:
 |---|---:|---:|
 | Adjacency-list graph storage | — | O(V + E) |
 | DFT | O(V + E) | O(V) |
-| Current Dijkstra | O(V² + E) | O(V) |
-| Fastest-path Dijkstra | O(V² + E) | O(V) |
-| Constrained Dijkstra | O(V² + E) | O(V) |
-| Time-budget reachability | O(V² + E) | O(V) |
+| Priority-queue Dijkstra | O((V + E) log E) | O(V + E) worst case |
+| Fastest-path Dijkstra | O((V + E) log E) | O(V + E) worst case |
+| Constrained Dijkstra | O((V + E) log E) | O(V + E) worst case |
+| Time-budget reachability | O((V + E) log E) | O(V + E) worst case |
 | One removal + DFT | O(V + E) | O(V) |
 | Repeated node-removal test | O(V(V + E)) | O(V) |
 | Repeated edge-removal test | O(E(V + E)) | O(V) |
@@ -376,7 +373,7 @@ The .NET CLI supports explicitly selecting the Release configuration with `dotne
 
 ## 12. Automated Tests
 
-A separate xUnit project, `MawanellaRouting.Tests`, contains unit tests built around a small manually defined graph. The tests cover shortest-distance routing, fastest routing, start-equals-target behaviour, invalid and unreachable nodes, congestion restrictions, excluded nodes and roads, time-budget reachability, depth-first traversal, and reachability after simulated node or road removal.
+A separate xUnit project, `MawanellaRouting.Tests`, contains unit tests built around a small manually defined graph. The tests cover shortest-distance routing, fastest routing, start-equals-target behaviour, invalid and unreachable nodes, congestion restrictions, excluded nodes and roads, time-budget reachability, depth-first traversal, reachability after simulated node or road removal, and a case where a later-discovered route improves a node's distance. Re-run the test command after algorithm changes to confirm the current version passes.
 
 Run the tests from the repository root with:
 
@@ -401,7 +398,7 @@ Current limitations include:
 - No real-time incidents
 - Simple CSV parsing using comma splitting
 - Bottleneck detection uses repeated removal and traversal rather than a specialized graph algorithm
-- Current Dijkstra implementation uses a linear search rather than a priority queue
+- The routing algorithm assumes non-negative edge weights, as required by Dijkstra's algorithm
 
 These limitations are documented intentionally so that the prototype's scope is clear.
 
@@ -431,7 +428,6 @@ The project demonstrates:
 
 For a production-quality system, possible improvements would include:
 
-- Priority-queue-based Dijkstra
 - Real road-network data
 - Live traffic information
 - One-way and turn restrictions
