@@ -343,7 +343,7 @@ Menu operations:
 0. Find a location by name or node ID.
 10. Browse the active dataset’s node or road records in pages of 20. The view reflects whichever tier is currently loaded.
 
-For routing operations, you can enter either a node ID (such as `N01`) or part of a location name. If the name matches several nodes, the application lists the matches and asks you to enter the exact node ID. Use option 0 to search for locations before planning a route.
+For routing operations, you can enter either a node ID (such as `N01`) or part of a location name. If the name matches several nodes, the application lists the matches and asks you to enter the exact node ID. Use option 0 to search for locations before planning a route. Route results show each node ID with its location name, the number of locations and roads on the route, and the relevant distance or estimated travel time. Shortest-distance and constrained routes also show the estimated travel time for that same route; fastest routes show the distance covered by that route. These are calculated from the stored edge values, not live traffic data.
 
 The Tier 4 and Tier 5 datasets are synthetic scalability datasets. All route distances, travel times, speed limits and congestion values are project data; the application does not provide live navigation or real-time traffic predictions.
 
