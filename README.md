@@ -331,6 +331,7 @@ The application loads Tier 1 by default and displays an interactive menu. Select
 
 Menu operations:
 
+0. Find a location by name or node ID.
 1. Find the shortest-distance route.
 2. Find the fastest route using the stored travel-time weights.
 3. Find a route with a congestion limit or an excluded node/road.
@@ -339,9 +340,8 @@ Menu operations:
 6. Run structural bottleneck analysis by temporarily ignoring nodes or roads during traversal.
 7. View network and node/neighbour information.
 8. Switch between the five datasets.
-9. Exit.
-0. Find a location by name or node ID.
-10. Browse the active dataset’s node or road records in pages of 20. The view reflects whichever tier is currently loaded.
+9. Browse the active dataset’s node or road records in pages of 20. The view reflects whichever tier is currently loaded.
+10. Exit.
 
 
 Reachability results use the shortest estimated travel time from the chosen starting location. Locations are displayed with their IDs and names, ordered by travel time; a location is included only when its estimated time is within the selected budget. The estimates come from the dataset and are not live traffic predictions.
