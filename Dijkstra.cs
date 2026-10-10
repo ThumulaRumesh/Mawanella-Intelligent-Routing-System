@@ -409,6 +409,45 @@ namespace Mawanella_Intelligent_Routing_System
 
         // Find all nodes reachable from a starting node
         // within a given travel-time budget.
+        public static Dictionary<string, double> FindReachableTravelTimes(Graph graph, string startNode, double timeBudget)
+        {
+            Dictionary<string, double> result = new Dictionary<string, double>();
+            if (!graph.GetNodes().ContainsKey(startNode) || timeBudget < 0 ||
+                double.IsNaN(timeBudget) || double.IsInfinity(timeBudget))
+                return result;
+
+            Dictionary<string, double> times = new Dictionary<string, double>();
+            HashSet<string> unvisited = new HashSet<string>();
+            foreach (string id in graph.GetNodes().Keys)
+            {
+                times[id] = double.PositiveInfinity;
+                unvisited.Add(id);
+            }
+            times[startNode] = 0;
+
+            while (unvisited.Count > 0)
+            {
+                string current = GetClosestNode(unvisited, times);
+                if (current == null || times[current] > timeBudget)
+                    break;
+                unvisited.Remove(current);
+
+                foreach (Edge edge in graph.GetNeighbours(current))
+                {
+                    if (!unvisited.Contains(edge.To))
+                        continue;
+                    double candidate = times[current] + edge.TravelTime;
+                    if (candidate < times[edge.To] && candidate <= timeBudget)
+                        times[edge.To] = candidate;
+                }
+            }
+
+            foreach (KeyValuePair<string, double> item in times)
+                if (item.Value <= timeBudget)
+                    result[item.Key] = item.Value;
+            return result;
+        }
+
         public static List<string> FindReachableNodes(
             Graph graph,
             string startNode,
