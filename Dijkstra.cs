@@ -453,94 +453,9 @@ namespace Mawanella_Intelligent_Routing_System
             string startNode,
             double timeBudget)
         {
-            // Check whether the starting node exists
-            if (!graph.GetNodes().ContainsKey(startNode))
-            {
-                return new List<string>();
-            }
-
-            // Initialize travel times and unvisited nodes
-            Dictionary<string, double> travelTimes =
-                new Dictionary<string, double>();
-
-            HashSet<string> unvisited =
-                new HashSet<string>();
-
-            // Initialize all nodes
-            foreach (string nodeID in graph.GetNodes().Keys)
-            {
-                travelTimes[nodeID] =
-                    double.PositiveInfinity;
-
-                unvisited.Add(nodeID);
-            }
-
-            // Travel time from start node to itself
-            travelTimes[startNode] = 0;
-
-            while (unvisited.Count > 0)
-            {
-                // Find node with the smallest travel time
-                string currentNode = GetClosestNode(
-                    unvisited,
-                    travelTimes
-                );
-
-                // No reachable node remains
-                if (currentNode == null)
-                {
-                    break;
-                }
-
-                // The remaining nodes cannot be reached
-                // within the time budget
-                if (travelTimes[currentNode] >
-                    timeBudget)
-                {
-                    break;
-                }
-
-                // Mark current node as visited
-                unvisited.Remove(currentNode);
-
-                // Check neighbouring nodes
-                foreach (Edge edge in graph.GetNeighbours(currentNode))
-                {
-                    if (!unvisited.Contains(edge.To))
-                    {
-                        continue;
-                    }
-
-                    // Calculate new travel time
-                    double newTravelTime =
-                        travelTimes[currentNode]
-                        + edge.TravelTime;
-
-                    // Update if the node can be reached
-                    // within the time budget
-                    if (newTravelTime <
-                        travelTimes[edge.To] &&
-                        newTravelTime <= timeBudget)
-                    {
-                        travelTimes[edge.To] =
-                            newTravelTime;
-                    }
-                }
-            }
-
-            // Create list of reachable nodes
-            List<string> reachableNodes =
-                new List<string>();
-
-            foreach (string nodeID in travelTimes.Keys)
-            {
-                if (travelTimes[nodeID] <= timeBudget)
-                {
-                    reachableNodes.Add(nodeID);
-                }
-            }
-
-            return reachableNodes;
+            // Keep the original list-based API while reusing the travel-time calculation.
+            return new List<string>(
+                FindReachableTravelTimes(graph, startNode, timeBudget).Keys);
         }
     }
 }
