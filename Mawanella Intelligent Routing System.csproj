@@ -62,5 +62,8 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MawanellaRouting.Tests/**/*.cs" />
+  </ItemGroup>
 
 </Project>
