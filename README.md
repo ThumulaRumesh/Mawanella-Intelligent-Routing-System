@@ -101,7 +101,7 @@ It is used for:
 - Excluded-edge routing
 - Time-budget reachability using travel time
 
-With the priority queue, routing no longer scans every unvisited node to find the next minimum. With duplicate queue entries used instead of decrease-key, a conservative bound for the search is O((V + E) log E) time and O(V + E) auxiliary space in the worst case.
+With the priority queue, routing no longer scans every unvisited node to find the next minimum. With duplicate queue entries used instead of decrease-key, a conservative bound for the search is O((V + E) log(V + E)) time and O(V + E) auxiliary space in the worst case.
 
 ### Depth-First Traversal (DFT)
 
@@ -290,10 +290,10 @@ Each benchmark search completed successfully:
 |---|---:|---:|
 | Adjacency-list graph storage | — | O(V + E) |
 | DFT | O(V + E) | O(V) |
-| Priority-queue Dijkstra | O((V + E) log E) | O(V + E) worst case |
-| Fastest-path Dijkstra | O((V + E) log E) | O(V + E) worst case |
-| Constrained Dijkstra | O((V + E) log E) | O(V + E) worst case |
-| Time-budget reachability | O((V + E) log E) | O(V + E) worst case |
+| Priority-queue Dijkstra | O((V + E) log(V + E)) | O(V + E) worst case |
+| Fastest-path Dijkstra | O((V + E) log(V + E)) | O(V + E) worst case |
+| Constrained Dijkstra | O((V + E) log(V + E)) | O(V + E) worst case |
+| Time-budget reachability | O((V + E) log(V + E)) | O(V + E) worst case |
 | One removal + DFT | O(V + E) | O(V) |
 | Repeated node-removal test | O(V(V + E)) | O(V) |
 | Repeated edge-removal test | O(E(V + E)) | O(V) |
