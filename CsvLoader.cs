@@ -50,6 +50,8 @@ namespace Mawanella_Intelligent_Routing_System
                 throw new InvalidDataException("Invalid edge CSV header in '" + filePath + "'.");
 
             var seenEdgeIds = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (Edge existing in graph.GetEdges())
+                seenEdgeIds.Add(existing.EdgeID);
 
             for (int i = 1; i < lines.Length; i++)
             {
@@ -75,10 +77,6 @@ namespace Mawanella_Intelligent_Routing_System
 
                 if (!seenEdgeIds.Add(edgeID))
                     throw RowError(filePath, i + 1, "duplicate edge ID '" + edgeID + "'");
-
-                foreach (Edge existing in graph.GetEdges())
-                    if (existing.EdgeID.Equals(edgeID, StringComparison.OrdinalIgnoreCase))
-                        throw RowError(filePath, i + 1, "duplicate edge ID '" + edgeID + "'");
 
                 double distance = ParseNumber(values[3], "distance", filePath, i + 1);
                 double speedLimit = ParseNumber(values[4], "speed limit", filePath, i + 1);
