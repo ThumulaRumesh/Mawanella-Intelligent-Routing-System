@@ -334,7 +334,7 @@ Menu operations:
 1. Find the shortest-distance route.
 2. Find the fastest route using the stored travel-time weights.
 3. Find a route with a congestion limit or an excluded node/road.
-4. List locations reachable within a travel-time budget.
+4. List locations reachable within a travel-time budget, showing each location's node ID, name, and estimated travel time sorted from quickest to slowest.
 5. Check network connectivity using DFT.
 6. Run structural bottleneck analysis by temporarily ignoring nodes or roads during traversal.
 7. View network and node/neighbour information.
@@ -342,6 +342,9 @@ Menu operations:
 9. Exit.
 0. Find a location by name or node ID.
 10. Browse the active dataset’s node or road records in pages of 20. The view reflects whichever tier is currently loaded.
+
+
+Reachability results use the shortest estimated travel time from the chosen starting location. Locations are displayed with their IDs and names, ordered by travel time; a location is included only when its estimated time is within the selected budget. The estimates come from the dataset and are not live traffic predictions.
 
 For routing operations, you can enter either a node ID (such as `N01`) or part of a location name. If the name matches several nodes, the application lists the matches and asks you to enter the exact node ID. Use option 0 to search for locations before planning a route. Route results show each node ID with its location name, the number of locations and roads on the route, and the relevant distance or estimated travel time. Shortest-distance and constrained routes also show the estimated travel time for that same route; fastest routes show the distance covered by that route. These are calculated from the stored edge values, not live traffic data.
 
