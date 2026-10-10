@@ -12,7 +12,13 @@ namespace Mawanella_Intelligent_Routing_System
             if (graph == null) throw new ArgumentNullException(nameof(graph));
 
             string[] lines = File.ReadAllLines(filePath);
-            if (lines.Length == 0 || lines[0].Trim() != "NodeID,Location,RoadType")
+            if (lines.Length == 0)
+                throw new InvalidDataException("Invalid node CSV header in '" + filePath + "'.");
+
+            string nodeHeader = lines[0].Trim().TrimStart('\uFEFF');
+            bool isStandardHeader = nodeHeader == "NodeID,Location,RoadType";
+            bool isSyntheticHeader = nodeHeader == "NodeID,LocationName,RoadOrArea";
+            if (!isStandardHeader && !isSyntheticHeader)
                 throw new InvalidDataException("Invalid node CSV header in '" + filePath + "'.");
 
             for (int i = 1; i < lines.Length; i++)
