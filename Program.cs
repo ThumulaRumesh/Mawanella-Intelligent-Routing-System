@@ -66,7 +66,7 @@ internal class Program
                 case "9": exit = true; Console.WriteLine("Exiting the routing system."); break;
                 case "0": FindLocation(); break;
                 case "10": ViewCurrentDataset(); break;
-                default: Console.WriteLine("Invalid choice. Enter a number from 0 to 9."); break;
+                default: Console.WriteLine("Invalid choice. Enter a listed menu option (0-10)."); break;
             }
 
             if (!exit)
