@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.37628.2 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mawanella Intelligent Routing System", "Mawanella Intelligent Routing System.csproj", "{7B42AB9B-96A8-4676-882B-85055852C98A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MawanellaRouting.Tests", "MawanellaRouting.Tests\MawanellaRouting.Tests.csproj", "{B6B5E59E-6ACD-4E8E-A6F4-6A91B7BDA241}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7B42AB9B-96A8-4676-882B-85055852C98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B42AB9B-96A8-4676-882B-85055852C98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B42AB9B-96A8-4676-882B-85055852C98A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6B5E59E-6ACD-4E8E-A6F4-6A91B7BDA241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6B5E59E-6ACD-4E8E-A6F4-6A91B7BDA241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6B5E59E-6ACD-4E8E-A6F4-6A91B7BDA241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6B5E59E-6ACD-4E8E-A6F4-6A91B7BDA241}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
