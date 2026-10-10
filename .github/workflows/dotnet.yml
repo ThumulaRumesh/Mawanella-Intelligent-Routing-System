@@ -29,3 +29,6 @@ jobs:
 
       - name: Build in Release mode
         run: dotnet build "Mawanella Intelligent Routing System.sln" --configuration Release --no-restore
+
+      - name: Run automated tests
+        run: dotnet test "Mawanella Intelligent Routing System.sln" --configuration Release --no-build
