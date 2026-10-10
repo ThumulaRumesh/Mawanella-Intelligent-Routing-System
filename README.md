@@ -343,6 +343,10 @@ Menu operations:
 
 The Tier 4 and Tier 5 datasets are synthetic scalability datasets. All route distances, travel times, speed limits and congestion values are project data; the application does not provide live navigation or real-time traffic predictions.
 
+### Dataset validation
+
+CSV loading checks the expected headers and field counts, rejects duplicate node/edge IDs and missing road endpoints, and validates numeric values and ranges (positive distance, speed and travel time; congestion from 0 to 100). Errors identify the file and row to help locate invalid records. Numeric CSV values are parsed using invariant culture so decimal values are interpreted consistently across regional Windows settings.
+
 ### Performance evaluation
 
 To run the separate performance evaluation without entering the interactive menu, use:
