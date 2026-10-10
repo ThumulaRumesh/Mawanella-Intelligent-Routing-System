@@ -64,7 +64,8 @@ internal class Program
                 case "7": NetworkInformation(); break;
                 case "8": ChangeDataset(); break;
                 case "9": exit = true; Console.WriteLine("Exiting the routing system."); break;
-                default: Console.WriteLine("Invalid choice. Enter a number from 1 to 9."); break;
+                case "0": FindLocation(); break;
+                default: Console.WriteLine("Invalid choice. Enter a number from 0 to 9."); break;
             }
 
             if (!exit)
@@ -94,6 +95,7 @@ internal class Program
         Console.WriteLine("7. View Network Information");
         Console.WriteLine("8. Change Dataset");
         Console.WriteLine("9. Exit");
+        Console.WriteLine("0. Find a Location by Name or Node ID");
         Console.WriteLine("--------------------------------------------------");
     }
 
@@ -127,10 +129,79 @@ internal class Program
         while (true)
         {
             Console.Write(prompt);
-            string id = (Console.ReadLine() ?? "").Trim().ToUpperInvariant();
+            string input = (Console.ReadLine() ?? "").Trim();
+            if (input.Length == 0)
+            {
+                Console.WriteLine("Enter a node ID or part of a location name.");
+                continue;
+            }
+
+            string id = input.ToUpperInvariant();
             if (graph.GetNode(id) != null) return id;
-            Console.WriteLine("Node not found. Example node ID: N01");
+
+            List<Node> matches = new List<Node>();
+            foreach (Node node in graph.GetNodes().Values)
+            {
+                if (node.Location.IndexOf(input, StringComparison.OrdinalIgnoreCase) >= 0)
+                    matches.Add(node);
+            }
+
+            if (matches.Count == 1)
+            {
+                Console.WriteLine("Selected: " + matches[0].NodeID + " - " + matches[0].Location);
+                return matches[0].NodeID;
+            }
+
+            if (matches.Count > 1)
+            {
+                Console.WriteLine("Matching locations:");
+                foreach (Node node in matches)
+                    Console.WriteLine("  " + node.NodeID + " - " + node.Location + " (" + node.RoadType + ")");
+                Console.WriteLine("Enter the exact node ID from the list.");
+            }
+            else
+            {
+                Console.WriteLine("No node ID or location matched '" + input + "'. Try a different name.");
+            }
         }
+    }
+
+    private static void FindLocation()
+    {
+        Console.WriteLine("FIND A LOCATION");
+        Console.Write("Enter a node ID or part of a location name: ");
+        string input = (Console.ReadLine() ?? "").Trim();
+        if (input.Length == 0)
+        {
+            Console.WriteLine("No search term entered.");
+            return;
+        }
+
+        List<Node> matches = new List<Node>();
+        string id = input.ToUpperInvariant();
+        Node exact = graph.GetNode(id);
+        if (exact != null)
+        {
+            matches.Add(exact);
+        }
+        else
+        {
+            foreach (Node node in graph.GetNodes().Values)
+            {
+                if (node.Location.IndexOf(input, StringComparison.OrdinalIgnoreCase) >= 0)
+                    matches.Add(node);
+            }
+        }
+
+        if (matches.Count == 0)
+        {
+            Console.WriteLine("No matching locations found.");
+            return;
+        }
+
+        Console.WriteLine("Matching locations (" + matches.Count + "):");
+        foreach (Node node in matches)
+            Console.WriteLine("  " + node.NodeID + " - " + node.Location + " (" + node.RoadType + ")");
     }
 
     private static bool ReadNumber(string prompt, double min, double max, out double value)
