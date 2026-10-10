@@ -36,6 +36,24 @@ public class DijkstraTests
     }
 
     [Fact]
+    public void PriorityQueue_UsesImprovedDistanceWhenNodeIsDiscoveredAgain()
+    {
+        var graph = new Graph();
+        foreach (string id in new[] { "A", "B", "C", "D" })
+            graph.AddNode(new Node(id, id, "Test road"));
+
+        graph.AddEdge(new Edge("AB", "A", "B", 10, 40, 10, 10, "Test road"));
+        graph.AddEdge(new Edge("AC", "A", "C", 1, 40, 10, 1, "Test road"));
+        graph.AddEdge(new Edge("CB", "C", "B", 1, 40, 10, 1, "Test road"));
+        graph.AddEdge(new Edge("BD", "B", "D", 1, 40, 10, 1, "Test road"));
+
+        var route = Dijkstra.FindShortestPath(graph, "A", "D", out double distance);
+
+        Assert.Equal(new[] { "A", "C", "B", "D" }, route);
+        Assert.Equal(3, distance);
+    }
+
+    [Fact]
     public void StartEqualsTarget_ReturnsSingleNodeAndZeroCost()
     {
         var route = Dijkstra.FindShortestPath(CreateGraph(), "A", "A", out double distance);
