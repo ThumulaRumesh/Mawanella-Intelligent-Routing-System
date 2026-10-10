@@ -420,6 +420,7 @@ namespace Mawanella_Intelligent_Routing_System
                 return new List<string>();
             }
 
+            // Initialize travel times and unvisited nodes
             Dictionary<string, double> travelTimes =
                 new Dictionary<string, double>();
 

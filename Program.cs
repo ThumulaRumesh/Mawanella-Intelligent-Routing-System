@@ -160,7 +160,7 @@ if (!runPerformanceTest)
             + " -> "
             + edge.To
             + " | Distance: "
-            + edge.Distance.ToString("F2")
+            + edge.Distance.ToString("F2") // F2 means format to 2 decimal places
             + " km | Travel Time: "
             + edge.TravelTime.ToString("F2")
             + " min | Congestion: "
@@ -278,7 +278,7 @@ if (!runPerformanceTest)
             startNode,
             targetNode,
             maximumCongestion,
-            null,
+            null, // 
             null,
             out constrainedDistance
         );
@@ -382,7 +382,7 @@ if (!runPerformanceTest)
             graph,
             startNode,
             targetNode,
-            100,
+            100, // means no congestion limit
             excludedNode,
             null,
             out excludedNodeDistance
@@ -546,6 +546,7 @@ if (!runPerformanceTest)
     int lowestReachableCount =
         graph.GetNodes().Count;
 
+    // Take every node, one at a time, pretend it has been removed, and run a reachability test.
     foreach (string nodeID
              in graph.GetNodes().Keys)
     {

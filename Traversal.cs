@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Generic; 
 
 namespace Mawanella_Intelligent_Routing_System
 {
@@ -24,6 +24,7 @@ namespace Mawanella_Intelligent_Routing_System
                 return visited;
             }
 
+            //stack is the to-do list
             stack.Push(startNode);
 
             while (stack.Count > 0)
@@ -53,6 +54,9 @@ namespace Mawanella_Intelligent_Routing_System
             return visited;
         }
 
+        //==================================
+        //Bottleneck method
+        //==================================
 
         // Count reachable nodes after removing a specific node
         public static int CountReachableAfterRemovingNode(

@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Generic; 
 
 namespace Mawanella_Intelligent_Routing_System
 {
     public class Graph
     {
-        private Dictionary<string, Node> nodes;
+        private Dictionary<string, Node> nodes; // contains all nodes in the graph, keyed by their NodeID → Node object
         private Dictionary<string, List<Edge>> adjacencyList;
-        private List<Edge> edges;
+        private List<Edge> edges; // contains all original edges in the graph
 
         public Graph()
         {
             nodes = new Dictionary<string, Node>();
-            adjacencyList = new Dictionary<string, List<Edge>>();
+            adjacencyList = new Dictionary<string, List<Edge>>();// Initialize the adjacency list
             edges = new List<Edge>();
         }
 
         // Add a node to the graph
         public void AddNode(Node node)
         {
-            if (!nodes.ContainsKey(node.NodeID))
+            if (!nodes.ContainsKey(node.NodeID)) // Check if the node already exists in the graph
             {
                 nodes.Add(node.NodeID, node);
                 adjacencyList.Add(
@@ -31,7 +31,7 @@ namespace Mawanella_Intelligent_Routing_System
         // Add an undirected edge to the graph
         public void AddEdge(Edge edge)
         {
-            if (adjacencyList.ContainsKey(edge.From) &&
+            if (adjacencyList.ContainsKey(edge.From) && // Check if both nodes exist in the graph
                 adjacencyList.ContainsKey(edge.To))
             {
                 // Store the original edge once
