@@ -356,13 +356,27 @@ internal class Program
     private static void Reachability()
     {
         Console.WriteLine("REACHABLE LOCATIONS");
-        string start = ReadNode("Starting node ID: ");
+        string start = ReadNode("Starting location (name or node ID): ");
         if (!ReadNumber("Travel-time budget in minutes: ", 0, 1000000, out double budget)) return;
-        List<string> reachable = Dijkstra.FindReachableNodes(graph, start, budget);
-        reachable.Sort(StringComparer.Ordinal);
-        Console.WriteLine(reachable.Count + " of " + graph.GetNodes().Count +
-            " locations are reachable within " + budget.ToString("F2") + " minutes.");
-        Console.WriteLine("Reachable node IDs: " + string.Join(", ", reachable));
+
+        Dictionary<string, double> times = Dijkstra.FindReachableTravelTimes(graph, start, budget);
+        List<string> ids = new List<string>(times.Keys);
+        ids.Sort((a, b) =>
+        {
+            int comparison = times[a].CompareTo(times[b]);
+            return comparison != 0 ? comparison : StringComparer.Ordinal.Compare(a, b);
+        });
+
+        Console.WriteLine(ids.Count + " of " + graph.GetNodes().Count +
+            " locations are reachable within " + budget.ToString("F2", CultureInfo.InvariantCulture) + " minutes.");
+        Console.WriteLine("Node ID | Location | Estimated travel time (min)");
+        foreach (string id in ids)
+        {
+            Node node = graph.GetNode(id);
+            Console.WriteLine(id + " | " + node.Location + " | " +
+                times[id].ToString("F2", CultureInfo.InvariantCulture));
+        }
+        Console.WriteLine("Travel times are project estimates, not live traffic predictions.");
     }
 
     private static void Connectivity()
