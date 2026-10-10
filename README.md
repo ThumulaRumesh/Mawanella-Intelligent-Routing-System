@@ -316,34 +316,48 @@ Where:
 
 ## 11. How to Run
 
-### Functional demonstration
+### Interactive routing menu
 
-1. Open the project in Visual Studio.
-2. Select the `Release` configuration when testing final performance.
-3. Set:
+1. Install the .NET 8 SDK.
+2. Open the solution in Visual Studio, or open a terminal in the project folder.
+3. Build and run the project. From a terminal, use:
 
-```csharp
-bool runPerformanceTest = false;
+```bash
+dotnet build
+dotnet run
 ```
 
-4. Build/Rebuild the solution.
-5. Run the application.
+The application loads Tier 1 by default and displays an interactive menu. Select one operation at a time; after the result, press Enter to return to the menu.
 
-The functional tests use the Tier 1 dataset by default.
+Menu operations:
+
+1. Find the shortest-distance route.
+2. Find the fastest route using the stored travel-time weights.
+3. Find a route with a congestion limit or an excluded node/road.
+4. List locations reachable within a travel-time budget.
+5. Check network connectivity using DFT.
+6. Run structural bottleneck analysis by temporarily ignoring nodes or roads during traversal.
+7. View dataset and node/neighbour information.
+8. Switch between the five datasets.
+9. Exit.
+
+The Tier 4 and Tier 5 datasets are synthetic scalability datasets. All route distances, travel times, speed limits and congestion values are project data; the application does not provide live navigation or real-time traffic predictions.
 
 ### Performance evaluation
 
-Set:
+To run the separate performance evaluation without entering the interactive menu, use:
 
-```csharp
-bool runPerformanceTest = true;
+```bash
+dotnet run -- --performance
 ```
 
-Then rebuild and run the application.
+This loads each dataset and measures a set of shortest-path searches. The measured times are machine- and run-dependent and may differ from the previously recorded values. Use the Release configuration for more consistent performance measurements.
 
-The performance section automatically loads the five datasets and reports the benchmark results.
+```bash
+dotnet run --configuration Release -- --performance
+```
 
-The .NET CLI also supports explicitly selecting the Release configuration with `dotnet build --configuration Release`. Microsoft documents `dotnet build` as the standard command for building a project and its dependencies. 
+The .NET CLI supports explicitly selecting the Release configuration with `dotnet build --configuration Release`.
 
 ## 12. Limitations
 
