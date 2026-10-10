@@ -34,7 +34,8 @@ The project is intended as an algorithmic prototype for the DSA assessment. It i
 ### Dependencies
 
 - .NET 8 SDK/runtime
-- No external NuGet packages; standard .NET libraries are used.
+- The console application uses standard .NET libraries.
+- The separate automated test project uses xUnit and the Microsoft .NET test SDK.
 
 ## 3. Project Structure
 
@@ -61,6 +62,9 @@ Mawanella Intelligent Routing System
 ├── Traversal.cs
 ├── GraphVisualizer.cs
 ├── Program.cs
+├── MawanellaRouting.Tests
+│   ├── MawanellaRouting.Tests.csproj
+│   └── DijkstraTests.cs
 └── README.md
 ```
 
@@ -370,7 +374,19 @@ dotnet run --configuration Release -- --performance
 
 The .NET CLI supports explicitly selecting the Release configuration with `dotnet build --configuration Release`.
 
-## 12. Limitations
+## 12. Automated Tests
+
+A separate xUnit project, `MawanellaRouting.Tests`, contains unit tests built around a small manually defined graph. The tests cover shortest-distance routing, fastest routing, start-equals-target behaviour, invalid and unreachable nodes, congestion restrictions, excluded nodes and roads, time-budget reachability, depth-first traversal, and reachability after simulated node or road removal.
+
+Run the tests from the repository root with:
+
+```bash
+dotnet test "Mawanella Intelligent Routing System.sln" --configuration Release
+```
+
+These tests are added to the solution and the GitHub Actions workflow is configured to run them after building. Their results still need to be confirmed by executing the test command or inspecting a successful workflow run.
+
+## 13. Limitations
 
 This is a Level 5 DSA prototype rather than a production navigation application.
 
@@ -389,7 +405,7 @@ Current limitations include:
 
 These limitations are documented intentionally so that the prototype's scope is clear.
 
-## 13. AI Use Declaration
+## 14. AI Use Declaration
 
 AI assistance was used during development as follows:
 - **Google Gemini:** Finding data and explaining datasets with the help of Google Maps.
