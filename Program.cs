@@ -223,29 +223,78 @@ internal class Program
 
     private static void PrintRoute(List<string> route)
     {
-        Console.WriteLine(route.Count == 0
-            ? "No route was found for the selected conditions."
-            : "Route: " + string.Join(" -> ", route));
+        if (route.Count == 0)
+        {
+            Console.WriteLine("No route was found for the selected conditions.");
+            return;
+        }
+
+        List<string> stops = new List<string>();
+        foreach (string nodeID in route)
+        {
+            Node node = graph.GetNode(nodeID);
+            stops.Add(node == null ? nodeID : node.NodeID + " (" + node.Location + ")");
+        }
+
+        Console.WriteLine("Route: " + string.Join(" -> ", stops));
+        Console.WriteLine("Locations visited along route: " + route.Count);
+        Console.WriteLine("Roads used: " + Math.Max(0, route.Count - 1));
+    }
+
+    private static double GetRouteTotal(List<string> route, bool useTravelTime)
+    {
+        double total = 0;
+        for (int i = 0; i < route.Count - 1; i++)
+        {
+            string from = route[i];
+            string to = route[i + 1];
+            Edge matchingEdge = null;
+
+            foreach (Edge edge in graph.GetNeighbours(from))
+            {
+                if (edge.To == to)
+                {
+                    matchingEdge = edge;
+                    break;
+                }
+            }
+
+            if (matchingEdge == null)
+                throw new InvalidOperationException("Could not find the road connecting " + from + " and " + to + ".");
+
+            total += useTravelTime ? matchingEdge.TravelTime : matchingEdge.Distance;
+        }
+
+        return total;
     }
 
     private static void ShortestRoute()
     {
         Console.WriteLine("SHORTEST-DISTANCE ROUTE");
-        string start = ReadNode("Start node ID: ");
-        string target = ReadNode("Destination node ID: ");
+        string start = ReadNode("Start location (name or node ID): ");
+        string target = ReadNode("Destination (name or node ID): ");
         List<string> route = Dijkstra.FindShortestPath(graph, start, target, out double distance);
         PrintRoute(route);
-        if (route.Count > 0) Console.WriteLine("Total distance: " + distance.ToString("F2") + " km");
+        if (route.Count > 0)
+        {
+            Console.WriteLine("Total distance: " + distance.ToString("F2") + " km");
+            Console.WriteLine("Estimated travel time along this route: " +
+                GetRouteTotal(route, true).ToString("F2") + " minutes");
+        }
     }
 
     private static void FastestRoute()
     {
         Console.WriteLine("FASTEST ROUTE");
-        string start = ReadNode("Start node ID: ");
-        string target = ReadNode("Destination node ID: ");
+        string start = ReadNode("Start location (name or node ID): ");
+        string target = ReadNode("Destination (name or node ID): ");
         List<string> route = Dijkstra.FindFastestPath(graph, start, target, out double time);
         PrintRoute(route);
-        if (route.Count > 0) Console.WriteLine("Estimated travel time: " + time.ToString("F2") + " minutes");
+        if (route.Count > 0)
+        {
+            Console.WriteLine("Estimated travel time: " + time.ToString("F2") + " minutes");
+            Console.WriteLine("Distance along this route: " + GetRouteTotal(route, false).ToString("F2") + " km");
+        }
         Console.WriteLine("Travel times are project estimates, not live traffic predictions.");
     }
 
@@ -259,8 +308,8 @@ internal class Program
         Console.Write("Constraint choice: ");
         string option = (Console.ReadLine() ?? "").Trim();
 
-        string start = ReadNode("Start node ID: ");
-        string target = ReadNode("Destination node ID: ");
+        string start = ReadNode("Start location (name or node ID): ");
+        string target = ReadNode("Destination (name or node ID): ");
         double congestion = 100;
         string excludedNode = null;
         string excludedEdge = null;
@@ -296,7 +345,12 @@ internal class Program
         List<string> route = Dijkstra.FindConstrainedPath(graph, start, target, congestion,
             excludedNode, excludedEdge, out double distance);
         PrintRoute(route);
-        if (route.Count > 0) Console.WriteLine("Total distance: " + distance.ToString("F2") + " km");
+        if (route.Count > 0)
+        {
+            Console.WriteLine("Total distance: " + distance.ToString("F2") + " km");
+            Console.WriteLine("Estimated travel time along this route: " +
+                GetRouteTotal(route, true).ToString("F2") + " minutes");
+        }
     }
 
     private static void Reachability()
