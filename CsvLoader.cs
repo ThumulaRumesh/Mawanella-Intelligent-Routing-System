@@ -49,6 +49,8 @@ namespace Mawanella_Intelligent_Routing_System
             if (lines.Length == 0 || lines[0].Trim() != expectedHeader)
                 throw new InvalidDataException("Invalid edge CSV header in '" + filePath + "'.");
 
+            var seenEdgeIds = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
             for (int i = 1; i < lines.Length; i++)
             {
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
@@ -70,6 +72,9 @@ namespace Mawanella_Intelligent_Routing_System
 
                 if (graph.GetNode(from) == null || graph.GetNode(to) == null)
                     throw RowError(filePath, i + 1, "both endpoint IDs must exist in the node dataset");
+
+                if (!seenEdgeIds.Add(edgeID))
+                    throw RowError(filePath, i + 1, "duplicate edge ID '" + edgeID + "'");
 
                 foreach (Edge existing in graph.GetEdges())
                     if (existing.EdgeID.Equals(edgeID, StringComparison.OrdinalIgnoreCase))
