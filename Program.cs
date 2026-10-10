@@ -423,6 +423,7 @@ internal class Program
         }
 
         Console.WriteLine();
+        Console.WriteLine(records[0]);
         Console.WriteLine("Showing " + (records.Count - 1) + " records from " + activeDataset.Name + ".");
         const int pageSize = 20;
         int start = 1;
