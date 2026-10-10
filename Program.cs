@@ -55,6 +55,7 @@ internal class Program
             Console.Write("Enter your choice: ");
             switch ((Console.ReadLine() ?? "").Trim())
             {
+                case "0": FindLocation(); break;
                 case "1": ShortestRoute(); break;
                 case "2": FastestRoute(); break;
                 case "3": ConstrainedRoute(); break;
@@ -63,9 +64,8 @@ internal class Program
                 case "6": Bottlenecks(); break;
                 case "7": NetworkInformation(); break;
                 case "8": ChangeDataset(); break;
-                case "9": exit = true; Console.WriteLine("Exiting the routing system."); break;
-                case "0": FindLocation(); break;
-                case "10": ViewCurrentDataset(); break;
+                case "9": ViewCurrentDataset(); break;
+                case "10": exit = true; Console.WriteLine("Exiting the routing system."); break;
                 default: Console.WriteLine("Invalid choice. Enter a listed menu option (0-10)."); break;
             }
 
@@ -87,6 +87,7 @@ internal class Program
         Console.WriteLine("Dataset: " + activeDataset.Name);
         Console.WriteLine("Nodes: " + graph.GetNodes().Count + " | Roads: " + graph.GetEdges().Count);
         Console.WriteLine();
+        Console.WriteLine("0. Find a Location by Name or Node ID");
         Console.WriteLine("1. Find the Shortest Route");
         Console.WriteLine("2. Find the Fastest Route");
         Console.WriteLine("3. Find a Route with Constraints");
@@ -95,9 +96,8 @@ internal class Program
         Console.WriteLine("6. Analyse Road Network Bottlenecks");
         Console.WriteLine("7. View Network Information");
         Console.WriteLine("8. Change Dataset");
-        Console.WriteLine("9. Exit");
-        Console.WriteLine("0. Find a Location by Name or Node ID");
-        Console.WriteLine("10. View Current Dataset Records");
+        Console.WriteLine("9. View Current Dataset Records");
+        Console.WriteLine("10. Exit");
         Console.WriteLine("--------------------------------------------------");
     }
 
