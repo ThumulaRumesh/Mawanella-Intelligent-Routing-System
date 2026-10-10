@@ -337,12 +337,13 @@ internal class Program
                 Stopwatch timer = Stopwatch.StartNew();
                 int attempts = 0, successes = 0;
 
-                foreach (string start in ids)
+                for (int startIndex = 0; startIndex < ids.Count; startIndex++)
                 {
+                    string start = ids[startIndex];
                     int samples = Math.Min(5, ids.Count);
                     for (int i = 0; i < samples; i++)
                     {
-                        string target = ids[(ids.IndexOf(start) + i) % ids.Count];
+                        string target = ids[(startIndex + i) % ids.Count];
                         List<string> route = Dijkstra.FindShortestPath(testGraph, start, target, out double _);
                         attempts++;
                         if (route.Count > 0) successes++;
