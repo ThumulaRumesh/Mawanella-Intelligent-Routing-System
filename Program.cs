@@ -532,7 +532,15 @@ internal class Program
 
     private static void RunPerformanceEvaluation()
     {
-        Console.WriteLine("PERFORMANCE EVALUATION (fresh measurements; results may vary)");
+        const int queryCount = 100;
+        const int rounds = 3;
+
+        Console.WriteLine("LINEAR DIJKSTRA VS PRIORITY-QUEUE DIJKSTRA");
+        Console.WriteLine("Each dataset uses the same 100 source/destination pairs per round.");
+        Console.WriteLine("Three timed rounds are run for each implementation.");
+        Console.WriteLine("Times are machine-dependent; close other heavy applications for a fairer comparison.");
+        Console.WriteLine();
+
         foreach (Dataset dataset in Datasets)
         {
             try
@@ -540,31 +548,141 @@ internal class Program
                 Graph testGraph = new Graph();
                 CsvLoader.LoadNodes(ResolveDataPath(dataset.Nodes), testGraph);
                 CsvLoader.LoadEdges(ResolveDataPath(dataset.Edges), testGraph);
-                List<string> ids = new List<string>(testGraph.GetNodes().Keys);
-                Stopwatch timer = Stopwatch.StartNew();
-                int attempts = 0, successes = 0;
 
-                for (int startIndex = 0; startIndex < ids.Count; startIndex++)
+                List<string> ids = new List<string>(testGraph.GetNodes().Keys);
+                ids.Sort(StringComparer.Ordinal);
+
+                if (ids.Count < 2)
                 {
-                    string start = ids[startIndex];
-                    int samples = Math.Min(5, ids.Count);
-                    for (int i = 0; i < samples; i++)
+                    Console.WriteLine(dataset.Name + ": not enough nodes to benchmark.");
+                    continue;
+                }
+
+                List<(string Start, string Target)> queries =
+                    new List<(string Start, string Target)>();
+
+                for (int i = 0; i < queryCount; i++)
+                {
+                    string start = ids[(i * 3) % ids.Count];
+                    string target = ids[(i * 7 + 1) % ids.Count];
+                    queries.Add((start, target));
+                }
+
+                // Warm up both implementations before measuring elapsed time.
+                int warmupCount = Math.Min(5, queries.Count);
+                for (int i = 0; i < warmupCount; i++)
+                {
+                    var query = queries[i];
+                    DijkstraBenchmark.FindShortestPathLinear(
+                        testGraph, query.Start, query.Target, out double _);
+                    Dijkstra.FindShortestPath(
+                        testGraph, query.Start, query.Target, out double _);
+                }
+
+                Stopwatch linearTimer = new Stopwatch();
+                Stopwatch priorityTimer = new Stopwatch();
+                int linearSuccesses = 0;
+                int prioritySuccesses = 0;
+
+                for (int round = 0; round < rounds; round++)
+                {
+                    // Alternate which implementation runs first to reduce ordering bias.
+                    if (round % 2 == 0)
                     {
-                        string target = ids[(startIndex + i) % ids.Count];
-                        List<string> route = Dijkstra.FindShortestPath(testGraph, start, target, out double _);
-                        attempts++;
-                        if (route.Count > 0) successes++;
+                        linearTimer.Start();
+                        foreach (var query in queries)
+                        {
+                            List<string> route = DijkstraBenchmark.FindShortestPathLinear(
+                                testGraph, query.Start, query.Target, out double _);
+                            if (route.Count > 0) linearSuccesses++;
+                        }
+                        linearTimer.Stop();
+
+                        priorityTimer.Start();
+                        foreach (var query in queries)
+                        {
+                            List<string> route = Dijkstra.FindShortestPath(
+                                testGraph, query.Start, query.Target, out double _);
+                            if (route.Count > 0) prioritySuccesses++;
+                        }
+                        priorityTimer.Stop();
+                    }
+                    else
+                    {
+                        priorityTimer.Start();
+                        foreach (var query in queries)
+                        {
+                            List<string> route = Dijkstra.FindShortestPath(
+                                testGraph, query.Start, query.Target, out double _);
+                            if (route.Count > 0) prioritySuccesses++;
+                        }
+                        priorityTimer.Stop();
+
+                        linearTimer.Start();
+                        foreach (var query in queries)
+                        {
+                            List<string> route = DijkstraBenchmark.FindShortestPathLinear(
+                                testGraph, query.Start, query.Target, out double _);
+                            if (route.Count > 0) linearSuccesses++;
+                        }
+                        linearTimer.Stop();
                     }
                 }
 
-                timer.Stop();
+                int matchingCosts = 0;
+                foreach (var query in queries)
+                {
+                    List<string> linearRoute = DijkstraBenchmark.FindShortestPathLinear(
+                        testGraph, query.Start, query.Target, out double linearCost);
+                    List<string> priorityRoute = Dijkstra.FindShortestPath(
+                        testGraph, query.Start, query.Target, out double priorityCost);
+
+                    bool bothUnreachable = linearRoute.Count == 0 && priorityRoute.Count == 0;
+                    bool bothReachableWithSameCost =
+                        linearRoute.Count > 0 &&
+                        priorityRoute.Count > 0 &&
+                        Math.Abs(linearCost - priorityCost) < 0.000001;
+
+                    if (bothUnreachable || bothReachableWithSameCost)
+                    {
+                        matchingCosts++;
+                    }
+                }
+
+                int totalTimedSearches = queryCount * rounds;
+                double linearAverage =
+                    linearTimer.Elapsed.TotalMilliseconds / totalTimedSearches;
+                double priorityAverage =
+                    priorityTimer.Elapsed.TotalMilliseconds / totalTimedSearches;
+                double speedup = priorityTimer.Elapsed.TotalMilliseconds > 0
+                    ? linearTimer.Elapsed.TotalMilliseconds / priorityTimer.Elapsed.TotalMilliseconds
+                    : 0;
+
                 Console.WriteLine(dataset.Name);
-                Console.WriteLine("  Successful searches: " + successes + "/" + attempts);
-                Console.WriteLine("  Total elapsed: " + timer.Elapsed.TotalMilliseconds.ToString("F3") + " ms");
-                Console.WriteLine("  Average per search: " +
-                    (attempts == 0 ? 0 : timer.Elapsed.TotalMilliseconds / attempts).ToString("F6") + " ms");
+                Console.WriteLine("  Queries per algorithm: " + totalTimedSearches);
+                Console.WriteLine("  Linear Dijkstra: " +
+                    linearTimer.Elapsed.TotalMilliseconds.ToString("F3") + " ms total; " +
+                    linearAverage.ToString("F6") + " ms/search");
+                Console.WriteLine("  Priority-queue Dijkstra: " +
+                    priorityTimer.Elapsed.TotalMilliseconds.ToString("F3") + " ms total; " +
+                    priorityAverage.ToString("F6") + " ms/search");
+                Console.WriteLine("  Relative speed: " + speedup.ToString("F2") + "x (linear time / priority-queue time)");
+                Console.WriteLine("  Successful timed searches: linear " +
+                    linearSuccesses + "/" + totalTimedSearches + "; priority queue " +
+                    prioritySuccesses + "/" + totalTimedSearches);
+                Console.WriteLine("  Route-cost agreement: " + matchingCosts + "/" + queries.Count +
+                    " source/destination pairs");
+                Console.WriteLine();
             }
-            catch (Exception ex) { Console.WriteLine(dataset.Name + ": evaluation failed - " + ex.Message); }
+            catch (Exception ex)
+            {
+                Console.WriteLine(dataset.Name + ": evaluation failed - " + ex.Message);
+                Console.WriteLine();
+            }
         }
+
+        Console.WriteLine("Use the cost-agreement count to check that both algorithms return the same shortest-path cost.");
+        Console.WriteLine("Timing results can vary by computer, system load and runtime conditions.");
     }
+}
 }
