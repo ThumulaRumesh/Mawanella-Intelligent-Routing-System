@@ -340,6 +340,9 @@ Menu operations:
 7. View dataset and node/neighbour information.
 8. Switch between the five datasets.
 9. Exit.
+0. Find a location by name or node ID.
+
+For routing operations, you can enter either a node ID (such as `N01`) or part of a location name. If the name matches several nodes, the application lists the matches and asks you to enter the exact node ID. Use option 0 to search for locations before planning a route.
 
 The Tier 4 and Tier 5 datasets are synthetic scalability datasets. All route distances, travel times, speed limits and congestion values are project data; the application does not provide live navigation or real-time traffic predictions.
 
