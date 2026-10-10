@@ -65,6 +65,7 @@ internal class Program
                 case "8": ChangeDataset(); break;
                 case "9": exit = true; Console.WriteLine("Exiting the routing system."); break;
                 case "0": FindLocation(); break;
+                case "10": ViewCurrentDataset(); break;
                 default: Console.WriteLine("Invalid choice. Enter a number from 0 to 9."); break;
             }
 
@@ -96,6 +97,7 @@ internal class Program
         Console.WriteLine("8. Change Dataset");
         Console.WriteLine("9. Exit");
         Console.WriteLine("0. Find a Location by Name or Node ID");
+        Console.WriteLine("10. View Current Dataset Records");
         Console.WriteLine("--------------------------------------------------");
     }
 
@@ -373,6 +375,71 @@ internal class Program
             Console.WriteLine("- " + edge.EdgeID + ": " + edge.From + " -> " + edge.To +
                 " | " + edge.Distance.ToString("F2") + " km | " +
                 edge.TravelTime.ToString("F2") + " min | congestion " + edge.Congestion.ToString("F0") + "%");
+    }
+
+
+    private static void ViewCurrentDataset()
+    {
+        Console.WriteLine("VIEW CURRENT DATASET");
+        Console.WriteLine("Active tier: " + activeDataset.Name);
+        Console.WriteLine("Nodes file: " + activeDataset.Nodes);
+        Console.WriteLine("Roads file: " + activeDataset.Edges);
+        Console.WriteLine();
+        Console.WriteLine("1. View locations (nodes)");
+        Console.WriteLine("2. View roads (edges)");
+        Console.WriteLine("0. Return to main menu");
+        Console.Write("Choose records to view: ");
+        string choice = (Console.ReadLine() ?? "").Trim();
+
+        List<string> records = new List<string>();
+        if (choice == "1")
+        {
+            records.Add("Node ID | Location | Road type");
+            List<Node> nodes = new List<Node>(graph.GetNodes().Values);
+            nodes.Sort((a, b) => StringComparer.Ordinal.Compare(a.NodeID, b.NodeID));
+            foreach (Node node in nodes)
+                records.Add(node.NodeID + " | " + node.Location + " | " + node.RoadType);
+        }
+        else if (choice == "2")
+        {
+            records.Add("Edge ID | From | To | Distance (km) | Travel time (min) | Speed limit (km/h) | Congestion (%) | Road type");
+            List<Edge> edges = new List<Edge>(graph.GetEdges());
+            edges.Sort((a, b) => StringComparer.Ordinal.Compare(a.EdgeID, b.EdgeID));
+            foreach (Edge edge in edges)
+                records.Add(edge.EdgeID + " | " + edge.From + " | " + edge.To + " | " +
+                    edge.Distance.ToString("F2", CultureInfo.InvariantCulture) + " | " +
+                    edge.TravelTime.ToString("F2", CultureInfo.InvariantCulture) + " | " +
+                    edge.SpeedLimit.ToString("F2", CultureInfo.InvariantCulture) + " | " +
+                    edge.Congestion.ToString("F0", CultureInfo.InvariantCulture) + " | " + edge.RoadType);
+        }
+        else if (choice == "0")
+        {
+            return;
+        }
+        else
+        {
+            Console.WriteLine("Invalid choice.");
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("Showing " + (records.Count - 1) + " records from " + activeDataset.Name + ".");
+        const int pageSize = 20;
+        int start = 1;
+        while (start < records.Count)
+        {
+            int end = Math.Min(start + pageSize, records.Count);
+            for (int i = start; i < end; i++)
+                Console.WriteLine(records[i]);
+
+            if (end >= records.Count) break;
+            Console.WriteLine("Showing records " + start + "-" + (end - 1) + " of " + (records.Count - 1) + ".");
+            Console.Write("Press Enter for the next page or type Q to stop: ");
+            if ((Console.ReadLine() ?? "").Trim().Equals("Q", StringComparison.OrdinalIgnoreCase))
+                break;
+            start = end;
+        }
+        Console.WriteLine("End of dataset records.");
     }
 
     private static void ChangeDataset()
