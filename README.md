@@ -262,27 +262,24 @@ No single critical edge was detected.
 
 ## 8. Performance Evaluation
 
-Five graph sizes were used to evaluate how the current Dijkstra implementation behaves as the input grows.
+The application includes a benchmark mode that compares the original linear-search Dijkstra implementation with the priority-queue implementation on the same graph datasets.
 
-| Dataset | Nodes | Edges | Dijkstra searches | Average time |
-|---|---:|---:|---:|---:|
-| Tier 1 | 45 | 85 | 225 | 0.026416 ms |
-| Tier 2 | 89 | 178 | 445 | 0.070910 ms |
-| Tier 3 | 175 | 347 | 875 | 0.389667 ms |
-| Tier 4 | 300 | 600 | 1500 | 0.329722 ms |
-| Tier 5 | 600 | 1200 | 3000 | 1.341842 ms |
+For each dataset, the benchmark:
+- Uses the same 100 deterministic source/destination pairs for both algorithms.
+- Performs a small warm-up before measuring.
+- Runs three timed rounds for each implementation and alternates which algorithm runs first.
+- Reports total elapsed time, average time per search, successful searches, and relative speed.
+- Compares the shortest-path costs from both implementations for all 100 pairs.
 
-The benchmark was run using the Release configuration.
+Run the benchmark in Release mode:
 
-The average execution time generally increased as the network size increased, although the measured value for Tier 4 was slightly lower than Tier 3. This variation is retained as measured rather than being manually adjusted.
+```bash
+dotnet run --configuration Release -- --performance
+```
 
-Each benchmark search completed successfully:
+The results are specific to the computer and run conditions. Close other heavy applications and compare the algorithms on the same machine. Do not treat one run's timing as a universal performance guarantee. If the route-cost agreement is less than 100/100, investigate before drawing conclusions about speed.
 
-- Tier 1: 225/225
-- Tier 2: 445/445
-- Tier 3: 875/875
-- Tier 4: 1500/1500
-- Tier 5: 3000/3000
+The measurements previously recorded in this README were obtained using the earlier linear-search implementation. They are historical baseline measurements, not results for the new priority-queue implementation. Run the updated benchmark to produce comparable measurements for both algorithms.
 
 ## 9. Complexity Summary
 
@@ -363,7 +360,7 @@ To run the separate performance evaluation without entering the interactive menu
 dotnet run -- --performance
 ```
 
-This loads each dataset and measures a set of shortest-path searches. The measured times are machine- and run-dependent and may differ from the previously recorded values. Use the Release configuration for more consistent performance measurements.
+This loads each dataset and measures a set of shortest-path searches. The benchmark compares the original linear-search version with the priority-queue version using the same queries. Times are machine- and run-dependent; use the Release configuration and compare both implementations on the same computer.
 
 ```bash
 dotnet run --configuration Release -- --performance
@@ -399,6 +396,7 @@ Current limitations include:
 - Simple CSV parsing using comma splitting
 - Bottleneck detection uses repeated removal and traversal rather than a specialized graph algorithm
 - The routing algorithm assumes non-negative edge weights, as required by Dijkstra's algorithm
+- The benchmark uses a fixed set of 100 source/destination pairs per dataset, so it is a practical comparison rather than a comprehensive benchmark suite
 
 These limitations are documented intentionally so that the prototype's scope is clear.
 
