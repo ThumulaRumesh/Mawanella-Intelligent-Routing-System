@@ -685,4 +685,3 @@ internal class Program
         Console.WriteLine("Timing results can vary by computer, system load and runtime conditions.");
     }
 }
-}
