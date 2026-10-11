@@ -55,8 +55,8 @@ namespace Mawanella_Intelligent_Routing_System
             string startNode,
             string targetNode,
             double maxCongestion,
-            string excludedNode,
-            string excludedEdgeID,
+            string? excludedNode,
+            string? excludedEdgeID,
             out double totalDistance)
         {
             totalDistance = 0;
