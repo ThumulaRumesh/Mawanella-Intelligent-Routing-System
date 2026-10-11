@@ -232,7 +232,7 @@ internal class Program
         List<string> stops = new List<string>();
         foreach (string nodeID in route)
         {
-            Node node = graph.GetNode(nodeID);
+            Node? node = graph.GetNode(nodeID);
             stops.Add(node == null ? nodeID : node.NodeID + " (" + node.Location + ")");
         }
 
