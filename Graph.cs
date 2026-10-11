@@ -60,14 +60,9 @@ namespace Mawanella_Intelligent_Routing_System
         // Get a node by its ID
         // Average Time: O(1)
         // Auxiliary Space: O(1)
-        public Node GetNode(string nodeID)
+        public Node? GetNode(string nodeID)
         {
-            if (nodes.ContainsKey(nodeID))
-            {
-                return nodes[nodeID];
-            }
-
-            return null;
+            return nodes.TryGetValue(nodeID, out Node? node) ? node : null;
         }
 
         // Get the neighbours of a node
