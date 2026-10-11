@@ -22,7 +22,7 @@ namespace Mawanella_Intelligent_Routing_System
             }
 
             Dictionary<string, double> distance = new Dictionary<string, double>();
-            Dictionary<string, string> previous = new Dictionary<string, string>();
+            Dictionary<string, string?> previous = new Dictionary<string, string?>();
             HashSet<string> unvisited = new HashSet<string>();
 
             foreach (string nodeID in graph.GetNodes().Keys)
@@ -36,7 +36,7 @@ namespace Mawanella_Intelligent_Routing_System
 
             while (unvisited.Count > 0)
             {
-                string currentNode = GetClosestNode(unvisited, distance);
+                string? currentNode = GetClosestNode(unvisited, distance);
 
                 if (currentNode == null)
                 {
@@ -74,7 +74,7 @@ namespace Mawanella_Intelligent_Routing_System
 
             totalDistance = distance[targetNode];
             List<string> path = new List<string>();
-            string current = targetNode;
+            string? current = targetNode;
 
             while (current != null)
             {
@@ -85,11 +85,11 @@ namespace Mawanella_Intelligent_Routing_System
             return path;
         }
 
-        private static string GetClosestNode(
+        private static string? GetClosestNode(
             HashSet<string> unvisited,
             Dictionary<string, double> values)
         {
-            string closestNode = null;
+            string? closestNode = null;
             double smallestValue = double.PositiveInfinity;
 
             foreach (string nodeID in unvisited)
