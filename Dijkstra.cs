@@ -105,7 +105,7 @@ namespace Mawanella_Intelligent_Routing_System
             }
 
             Dictionary<string, double> distance = new Dictionary<string, double>();
-            Dictionary<string, string> previous = new Dictionary<string, string>();
+            Dictionary<string, string?> previous = new Dictionary<string, string?>();
 
             foreach (string nodeID in graph.GetNodes().Keys)
             {
@@ -121,7 +121,11 @@ namespace Mawanella_Intelligent_Routing_System
 
             while (priorityQueue.Count > 0)
             {
-                priorityQueue.TryDequeue(out string currentNode, out double currentDistance);
+                if (!priorityQueue.TryDequeue(out string? currentNode, out double currentDistance) ||
+                    currentNode == null)
+                {
+                    continue;
+                }
 
                 // Ignore an old queue entry if a better route was found later.
                 if (currentDistance > distance[currentNode])
@@ -161,7 +165,7 @@ namespace Mawanella_Intelligent_Routing_System
             totalCost = distance[targetNode];
 
             List<string> path = new List<string>();
-            string current = targetNode;
+            string? current = targetNode;
 
             while (current != null)
             {
@@ -207,7 +211,11 @@ namespace Mawanella_Intelligent_Routing_System
 
             while (priorityQueue.Count > 0)
             {
-                priorityQueue.TryDequeue(out string currentNode, out double currentTime);
+                if (!priorityQueue.TryDequeue(out string? currentNode, out double currentTime) ||
+                    currentNode == null)
+                {
+                    continue;
+                }
 
                 // Skip stale entries and stop when the budget is exceeded.
                 if (currentTime > times[currentNode])
