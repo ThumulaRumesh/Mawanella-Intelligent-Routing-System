@@ -29,8 +29,8 @@ internal class Program
         new Dataset("Tier 5 - 600 nodes / 1200 roads (synthetic)", "Data/Mawanella_Routing_Nodes_Tier5_600_Synthetic.csv", "Data/Mawanella_Routing_Edges_Tier5_1200_Synthetic.csv", true)
     };
 
-    private static Graph graph;
-    private static Dataset activeDataset;
+    private static Graph graph = null!;
+    private static Dataset activeDataset = null!;
 
     private static void Main(string[] args)
     {
@@ -115,12 +115,12 @@ internal class Program
 
     private static string ResolveDataPath(string relativePath)
     {
-        string folder = Directory.GetCurrentDirectory();
+        string? folder = Directory.GetCurrentDirectory();
         for (int i = 0; i < 7 && folder != null; i++)
         {
             string candidate = Path.Combine(folder, relativePath);
             if (File.Exists(candidate)) return candidate;
-            DirectoryInfo parent = Directory.GetParent(folder);
+            DirectoryInfo? parent = Directory.GetParent(folder);
             folder = parent == null ? null : parent.FullName;
         }
         throw new FileNotFoundException("Data file not found: " + relativePath);
@@ -181,7 +181,7 @@ internal class Program
 
         List<Node> matches = new List<Node>();
         string id = input.ToUpperInvariant();
-        Node exact = graph.GetNode(id);
+        Node? exact = graph.GetNode(id);
         if (exact != null)
         {
             matches.Add(exact);
@@ -248,7 +248,7 @@ internal class Program
         {
             string from = route[i];
             string to = route[i + 1];
-            Edge matchingEdge = null;
+            Edge? matchingEdge = null;
 
             foreach (Edge edge in graph.GetNeighbours(from))
             {
@@ -311,8 +311,8 @@ internal class Program
         string start = ReadNode("Start location (name or node ID): ");
         string target = ReadNode("Destination (name or node ID): ");
         double congestion = 100;
-        string excludedNode = null;
-        string excludedEdge = null;
+        string? excludedNode = null;
+        string? excludedEdge = null;
 
         if (option == "1" || option == "4")
             if (!ReadNumber("Maximum congestion (0-100): ", 0, 100, out congestion)) return;
@@ -372,7 +372,8 @@ internal class Program
         Console.WriteLine("Node ID | Location | Estimated travel time (min)");
         foreach (string id in ids)
         {
-            Node node = graph.GetNode(id);
+            Node? node = graph.GetNode(id);
+            if (node == null) continue;
             Console.WriteLine(id + " | " + node.Location + " | " +
                 times[id].ToString("F2", CultureInfo.InvariantCulture));
         }
@@ -396,7 +397,7 @@ internal class Program
         Console.WriteLine("Each candidate is temporarily ignored during analysis; the loaded graph is not changed.");
         string start = ReadNode("Starting node ID: ");
         int baseline = Traversal.DFT(graph, start).Count;
-        string criticalNode = null, criticalEdge = null, edgeFrom = null, edgeTo = null;
+        string? criticalNode = null, criticalEdge = null, edgeFrom = null, edgeTo = null;
         int lowestNodeCount = baseline, lowestEdgeCount = baseline;
 
         foreach (string id in graph.GetNodes().Keys)
@@ -436,7 +437,12 @@ internal class Program
         Console.WriteLine("Undirected roads: " + graph.GetEdges().Count);
         Console.WriteLine("The prototype uses project values and does not use live traffic data.");
 
-        Node node = graph.GetNode(ReadNode("Node ID to inspect: "));
+        Node? node = graph.GetNode(ReadNode("Node ID to inspect: "));
+        if (node == null)
+        {
+            Console.WriteLine("The selected node could not be found.");
+            return;
+        }
         Console.WriteLine("Location: " + node.Location);
         Console.WriteLine("Road type: " + node.RoadType);
         foreach (Edge edge in graph.GetNeighbours(node.NodeID))
